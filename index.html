@@ -1,0 +1,2590 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Factor Quest</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+:root{
+  --paper:#FFF6E7;
+  --paper-2:#FDEBCF;
+  --surface:#FFFFFF;
+  --surface-2:#FFF0D9;
+  --ink:#17242E;
+  --ink-soft:#5F7280;
+  --line:#E6D4B8;
+  --line-strong:#CDB58F;
+  --forest:#17925A;
+  --forest-dark:#0F6B41;
+  --mountain:#2A66C0;
+  --mountain-dark:#1C4A92;
+  --citadel:#B03E86;
+  --citadel-dark:#872C66;
+  --gold:#EC9F22;
+  --gold-dark:#B87613;
+  --berry:#DC3E58;
+  --berry-dark:#A8293F;
+  --good:#17925A;
+  --good-soft:#DFF5E9;
+  --bad:#C92F49;
+  --bad-soft:#FCE3E7;
+  --world:var(--forest);
+  --world-dark:var(--forest-dark);
+  --world-soft:#DFF3E8;
+  --hat:#9C6B3A;
+  --hat-dark:#7A5029;
+  --shadow-card:0 10px 0 rgba(23,36,46,.07);
+  --r-lg:22px;
+  --r-md:16px;
+  --r-sm:10px;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#101A22;
+    --paper-2:#16232C;
+    --surface:#1B2A34;
+    --surface-2:#22333F;
+    --ink:#EDF4F8;
+    --ink-soft:#A0B4C0;
+    --line:#2E4351;
+    --line-strong:#43606F;
+    --forest:#35C486;
+    --forest-dark:#1E8257;
+    --mountain:#5E9BF0;
+    --mountain-dark:#2F63AE;
+    --citadel:#E573BD;
+    --citadel-dark:#9C4479;
+    --gold:#FFBE55;
+    --gold-dark:#B87B1F;
+    --berry:#FF6E85;
+    --berry-dark:#B53F52;
+    --good:#35C486;
+    --good-soft:#123528;
+    --bad:#FF6E85;
+    --bad-soft:#3A1922;
+    --world-soft:#123528;
+    --hat:#B27F48;
+    --hat-dark:#8A5F32;
+    --shadow-card:0 10px 0 rgba(0,0,0,.28);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101A22;
+  --paper-2:#16232C;
+  --surface:#1B2A34;
+  --surface-2:#22333F;
+  --ink:#EDF4F8;
+  --ink-soft:#A0B4C0;
+  --line:#2E4351;
+  --line-strong:#43606F;
+  --forest:#35C486;
+  --forest-dark:#1E8257;
+  --mountain:#5E9BF0;
+  --mountain-dark:#2F63AE;
+  --citadel:#E573BD;
+  --citadel-dark:#9C4479;
+  --gold:#FFBE55;
+  --gold-dark:#B87B1F;
+  --berry:#FF6E85;
+  --berry-dark:#B53F52;
+  --good:#35C486;
+  --good-soft:#123528;
+  --bad:#FF6E85;
+  --bad-soft:#3A1922;
+  --world-soft:#123528;
+  --hat:#B27F48;
+  --hat-dark:#8A5F32;
+  --shadow-card:0 10px 0 rgba(0,0,0,.28);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  background-image:radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--line) 70%, transparent) 1px, transparent 0);
+  background-size:26px 26px;
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:17px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.app{
+  max-width:1000px;
+  margin:0 auto;
+  padding-inline:18px;
+  padding-block:14px 48px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  min-height:100vh;
+}
+h1,h2,h3,h4{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.12;font-weight:800}
+p{margin:0}
+button{font:inherit;color:inherit}
+
+/* ---------- HUD ---------- */
+.hud{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  background:var(--surface);
+  border:3px solid var(--line);
+  border-radius:999px;
+  padding:7px 10px;
+  box-shadow:0 5px 0 color-mix(in srgb, var(--line) 60%, transparent);
+}
+.hud-brand{
+  font-family:var(--display);
+  font-weight:800;
+  font-size:.95rem;
+  letter-spacing:.02em;
+  padding-inline:8px 4px;
+  white-space:nowrap;
+}
+.hud-stats{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto;align-items:center}
+.stat{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--surface-2);
+  border:2px solid var(--line);
+  border-radius:999px;
+  padding:3px 11px 3px 8px;
+  font-weight:800;
+  font-size:.92rem;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.stat .stat-ico{font-size:1rem;line-height:1}
+.stat.is-streak[data-hot="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 20%, var(--surface))}
+.icon-btn{
+  border:2px solid var(--line);
+  background:var(--surface-2);
+  border-radius:999px;
+  width:38px;height:38px;
+  display:grid;place-items:center;
+  cursor:pointer;font-size:1.05rem;
+  transition:transform .12s ease, background .12s ease;
+}
+.icon-btn:hover{background:var(--surface);transform:translateY(-1px)}
+.icon-btn:active{transform:translateY(1px)}
+
+/* ---------- buttons ---------- */
+.btn{
+  font-family:var(--display);
+  font-weight:800;
+  font-size:1.05rem;
+  letter-spacing:.01em;
+  border:3px solid var(--ink);
+  background:var(--surface);
+  color:var(--ink);
+  border-radius:var(--r-md);
+  padding:12px 22px;
+  cursor:pointer;
+  box-shadow:0 5px 0 var(--ink);
+  transition:transform .1s ease, box-shadow .1s ease, background .12s ease;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 var(--ink)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:0 5px 0 var(--ink)}
+.btn-xl{font-size:1.25rem;padding:16px 26px;border-radius:var(--r-lg)}
+.btn-primary{background:var(--world);color:#fff;border-color:var(--world-dark);box-shadow:0 5px 0 var(--world-dark)}
+.btn-primary:hover{box-shadow:0 7px 0 var(--world-dark)}
+.btn-primary:active{box-shadow:0 2px 0 var(--world-dark)}
+.btn-primary:disabled{box-shadow:0 5px 0 var(--world-dark)}
+.btn-gold{background:var(--gold);color:#2A1B02;border-color:var(--gold-dark);box-shadow:0 5px 0 var(--gold-dark)}
+.btn-gold:hover{box-shadow:0 7px 0 var(--gold-dark)}
+.btn-gold:active{box-shadow:0 2px 0 var(--gold-dark)}
+.btn-berry{background:var(--berry);color:#fff;border-color:var(--berry-dark);box-shadow:0 5px 0 var(--berry-dark)}
+.btn-berry:hover{box-shadow:0 7px 0 var(--berry-dark)}
+.btn-berry:active{box-shadow:0 2px 0 var(--berry-dark)}
+.btn-quiet{background:var(--surface-2);border-color:var(--line-strong);box-shadow:0 5px 0 var(--line-strong);font-size:.98rem;padding:10px 18px}
+.btn-quiet:hover{box-shadow:0 7px 0 var(--line-strong)}
+.btn-quiet:active{box-shadow:0 2px 0 var(--line-strong)}
+:where(button,[tabindex]):focus-visible{outline:3px dashed var(--ink);outline-offset:3px;border-radius:6px}
+
+/* ---------- screens ---------- */
+.screen{display:flex;flex-direction:column;gap:18px;animation:screen-in .28s ease both}
+@keyframes screen-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{
+  background:var(--surface);
+  border:3px solid var(--line);
+  border-radius:var(--r-lg);
+  padding:22px;
+  box-shadow:var(--shadow-card);
+}
+.label{
+  font-family:var(--body);
+  font-weight:800;
+  font-size:.74rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+
+/* ---------- home ---------- */
+.hero{
+  position:relative;
+  overflow:hidden;
+  border:3px solid var(--line);
+  border-radius:var(--r-lg);
+  background:
+    radial-gradient(120% 90% at 15% 0%, color-mix(in srgb,var(--forest) 24%, transparent), transparent 62%),
+    radial-gradient(120% 90% at 85% 10%, color-mix(in srgb,var(--mountain) 26%, transparent), transparent 60%),
+    radial-gradient(90% 80% at 60% 100%, color-mix(in srgb,var(--gold) 24%, transparent), transparent 60%),
+    var(--surface);
+  padding:26px 24px 22px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:20px;
+  align-items:center;
+  box-shadow:var(--shadow-card);
+}
+.hero-title{font-size:clamp(2.1rem,6.4vw,3.3rem);letter-spacing:-.01em}
+.hero-sub{font-family:var(--display);font-weight:600;font-size:clamp(1.05rem,2.6vw,1.35rem);color:var(--ink);opacity:.85;margin-top:2px}
+.hero-meta{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  border:2px solid var(--line-strong);
+  background:color-mix(in srgb,var(--surface) 82%, transparent);
+  border-radius:999px;padding:4px 12px;
+  font-weight:700;font-size:.85rem;
+}
+.mascot-wrap{display:grid;place-items:center;gap:6px}
+.mascot{width:clamp(96px,20vw,132px);height:auto;filter:drop-shadow(0 6px 0 rgba(23,36,46,.12))}
+.mascot-name{font-family:var(--display);font-weight:700;font-size:.9rem;color:var(--ink-soft)}
+.bob{animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.menu-btn{
+  text-align:left;
+  border:3px solid var(--ink);
+  border-radius:var(--r-lg);
+  background:var(--surface);
+  padding:18px;
+  cursor:pointer;
+  box-shadow:0 6px 0 var(--ink);
+  display:grid;gap:4px;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.menu-btn:hover{transform:translateY(-3px);box-shadow:0 9px 0 var(--ink)}
+.menu-btn:active{transform:translateY(3px);box-shadow:0 3px 0 var(--ink)}
+.menu-btn strong{font-family:var(--display);font-size:1.3rem;font-weight:800;display:flex;gap:9px;align-items:center}
+.menu-btn span{color:var(--ink-soft);font-size:.94rem;font-weight:600}
+.menu-btn.m-adventure{background:color-mix(in srgb,var(--forest) 14%, var(--surface));border-color:var(--forest-dark);box-shadow:0 6px 0 var(--forest-dark)}
+.menu-btn.m-adventure:hover{box-shadow:0 9px 0 var(--forest-dark)}
+.menu-btn.m-adventure:active{box-shadow:0 3px 0 var(--forest-dark)}
+.menu-btn.m-practice{background:color-mix(in srgb,var(--mountain) 14%, var(--surface));border-color:var(--mountain-dark);box-shadow:0 6px 0 var(--mountain-dark)}
+.menu-btn.m-practice:hover{box-shadow:0 9px 0 var(--mountain-dark)}
+.menu-btn.m-practice:active{box-shadow:0 3px 0 var(--mountain-dark)}
+.menu-btn.m-challenge{background:color-mix(in srgb,var(--gold) 16%, var(--surface));border-color:var(--gold-dark);box-shadow:0 6px 0 var(--gold-dark)}
+.menu-btn.m-challenge:hover{box-shadow:0 9px 0 var(--gold-dark)}
+.menu-btn.m-challenge:active{box-shadow:0 3px 0 var(--gold-dark)}
+
+.badge-rail{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px}
+.badge{
+  display:inline-flex;align-items:center;gap:7px;
+  border:2px dashed var(--line-strong);
+  border-radius:999px;padding:5px 13px;
+  font-weight:700;font-size:.88rem;color:var(--ink-soft);
+  background:var(--surface-2);
+}
+.badge[data-earned="true"]{
+  border-style:solid;border-color:var(--gold);
+  background:color-mix(in srgb,var(--gold) 20%, var(--surface));
+  color:var(--ink);
+}
+.badge .b-ico{filter:grayscale(1);opacity:.5}
+.badge[data-earned="true"] .b-ico{filter:none;opacity:1}
+
+/* ---------- map ---------- */
+.map{
+  position:relative;
+  border:3px solid var(--line);
+  border-radius:var(--r-lg);
+  background:
+    radial-gradient(70% 80% at 12% 70%, color-mix(in srgb,var(--forest) 20%, transparent), transparent 60%),
+    radial-gradient(70% 80% at 50% 22%, color-mix(in srgb,var(--mountain) 20%, transparent), transparent 60%),
+    radial-gradient(70% 80% at 88% 72%, color-mix(in srgb,var(--citadel) 20%, transparent), transparent 60%),
+    var(--surface);
+  padding:22px;
+  box-shadow:var(--shadow-card);
+}
+.map-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.map-nodes{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.world-node{
+  border:3px solid var(--ink);
+  border-radius:var(--r-lg);
+  background:var(--surface);
+  padding:16px 14px;
+  cursor:pointer;
+  box-shadow:0 6px 0 var(--ink);
+  display:grid;gap:6px;justify-items:center;text-align:center;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.world-node:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 9px 0 var(--ink)}
+.world-node:active:not(:disabled){transform:translateY(3px);box-shadow:0 3px 0 var(--ink)}
+.world-node:disabled{cursor:not-allowed;opacity:.62;border-style:dashed;box-shadow:none;background:var(--surface-2)}
+.world-node .wn-ico{font-size:2.4rem;line-height:1}
+.world-node .wn-name{font-family:var(--display);font-weight:800;font-size:1.1rem}
+.world-node .wn-focus{font-size:.85rem;color:var(--ink-soft);font-weight:600}
+.world-node .wn-state{font-weight:800;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+.world-node[data-w="1"]{border-color:var(--forest-dark);box-shadow:0 6px 0 var(--forest-dark);background:color-mix(in srgb,var(--forest) 10%, var(--surface))}
+.world-node[data-w="1"]:hover:not(:disabled){box-shadow:0 9px 0 var(--forest-dark)}
+.world-node[data-w="2"]{border-color:var(--mountain-dark);box-shadow:0 6px 0 var(--mountain-dark);background:color-mix(in srgb,var(--mountain) 10%, var(--surface))}
+.world-node[data-w="2"]:hover:not(:disabled){box-shadow:0 9px 0 var(--mountain-dark)}
+.world-node[data-w="3"]{border-color:var(--citadel-dark);box-shadow:0 6px 0 var(--citadel-dark);background:color-mix(in srgb,var(--citadel) 10%, var(--surface))}
+.world-node[data-w="3"]:hover:not(:disabled){box-shadow:0 9px 0 var(--citadel-dark)}
+.world-node:disabled[data-w]{box-shadow:none}
+
+/* ---------- quiz ---------- */
+.quiz-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.world-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--world);color:#fff;
+  border:3px solid var(--world-dark);
+  border-radius:999px;padding:5px 16px;
+  font-family:var(--display);font-weight:800;font-size:1rem;
+}
+.q-count{font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+.level-pill{
+  border:2px solid var(--line-strong);background:var(--surface-2);
+  border-radius:999px;padding:3px 11px;font-weight:800;font-size:.78rem;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.timer{margin-left:auto;display:flex;align-items:center;gap:9px;min-width:150px}
+.quiz-bar #btn-quiz-home{margin-left:auto}
+.timer-bar{flex:1;height:12px;border-radius:999px;background:var(--surface-2);border:2px solid var(--line);overflow:hidden}
+.timer-fill{height:100%;width:100%;background:var(--good);border-radius:999px;transition:width .95s linear, background .3s ease}
+.timer-fill[data-low="true"]{background:var(--berry)}
+.timer-num{font-weight:800;font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+
+.trail{display:flex;align-items:center;gap:6px;padding:4px 0}
+.trail-pip{
+  flex:1;height:12px;border-radius:999px;
+  background:var(--surface-2);border:2px solid var(--line);
+  position:relative;
+}
+.trail-pip[data-state="done"]{background:var(--world);border-color:var(--world-dark)}
+.trail-pip[data-state="miss"]{background:var(--bad-soft);border-color:var(--bad);border-style:dashed}
+.trail-pip[data-state="now"]{background:var(--gold);border-color:var(--gold-dark)}
+.trail-mascot{width:44px;flex:0 0 auto}
+
+.q-instruction{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
+.q-stem{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:clamp(1.3rem,3.4vw,1.7rem);
+  line-height:1.28;
+  text-wrap:balance;
+}
+.q-maths{
+  font-family:var(--display);
+  font-weight:800;
+  font-size:clamp(2rem,7vw,2.9rem);
+  letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;
+  text-align:center;
+  padding:14px 10px;
+  margin-top:12px;
+  background:var(--surface-2);
+  border:3px dashed var(--line-strong);
+  border-radius:var(--r-md);
+  overflow-x:auto;
+}
+.q-maths .blank{
+  display:inline-block;min-width:1.5em;
+  border-bottom:6px solid var(--world);
+  color:var(--world);
+}
+.seq-term{display:inline-block;padding-inline:.18em}
+.q-note{margin-top:12px;color:var(--ink-soft);font-weight:600;font-size:.95rem}
+
+.opts{display:grid;gap:10px;margin-top:16px}
+.opts[data-cols="num"]{grid-template-columns:repeat(auto-fit,minmax(88px,1fr))}
+.opts[data-cols="text"]{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.opts[data-cols="wide"]{grid-template-columns:1fr}
+.opts[data-cols="two"]{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.opt{
+  position:relative;
+  border:3px solid var(--line-strong);
+  background:var(--surface);
+  border-radius:var(--r-md);
+  padding:14px 12px;
+  min-height:62px;
+  cursor:pointer;
+  font-family:var(--display);
+  font-weight:800;
+  font-size:1.45rem;
+  font-variant-numeric:tabular-nums;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  text-align:center;
+  box-shadow:0 5px 0 color-mix(in srgb,var(--line-strong) 70%, transparent);
+  transition:transform .1s ease, box-shadow .1s ease, background .12s ease, border-color .12s ease;
+}
+.opt.opt-text{font-size:1.05rem;font-family:var(--body);font-weight:700;line-height:1.35;text-align:left;justify-content:flex-start}
+.opt:hover:not(:disabled){transform:translateY(-2px);background:var(--surface-2)}
+.opt:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 color-mix(in srgb,var(--line-strong) 70%, transparent)}
+.opt[aria-pressed="true"],.opt[aria-checked="true"]{
+  border-color:var(--world-dark);
+  background:color-mix(in srgb,var(--world) 18%, var(--surface));
+  box-shadow:0 5px 0 var(--world-dark);
+}
+.opt .mark{
+  position:absolute;top:-11px;right:-9px;
+  width:28px;height:28px;border-radius:999px;
+  display:none;place-items:center;
+  font-family:var(--body);font-weight:800;font-size:.92rem;
+  border:3px solid var(--surface);
+}
+.opt[data-result]{cursor:default}
+.opt[data-result="right"]{border-color:var(--good);background:var(--good-soft);box-shadow:0 5px 0 var(--good)}
+.opt[data-result="wrong"]{border-color:var(--bad);background:var(--bad-soft);box-shadow:0 5px 0 var(--bad)}
+.opt[data-result="missed"]{border-color:var(--good);border-style:dashed;background:var(--surface)}
+.opt[data-result] .mark{display:grid}
+.opt[data-result="right"] .mark{background:var(--good);color:#fff}
+.opt[data-result="wrong"] .mark{background:var(--bad);color:#fff}
+.opt[data-result="missed"] .mark{background:var(--gold);color:#2A1B02}
+.opt:disabled{opacity:1}
+.opt.shake{animation:shake .34s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.opt.pop{animation:pop .34s ease}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.09)}100%{transform:scale(1)}}
+
+/* stepping stones */
+.stones{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:18px;align-items:flex-end}
+.stone{
+  width:84px;height:84px;border-radius:50% 50% 42% 42%;
+  border:3px solid var(--line-strong);
+  background:var(--surface-2);
+  font-family:var(--display);font-weight:800;font-size:1.6rem;
+  cursor:pointer;display:grid;place-items:center;
+  box-shadow:0 5px 0 color-mix(in srgb,var(--line-strong) 70%, transparent);
+  transition:transform .12s ease, background .15s ease, border-color .15s ease;
+  position:relative;
+}
+.stone:hover:not(:disabled){transform:translateY(-3px)}
+.stone[data-result="right"]{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.stone[data-result="wrong"]{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.stone[data-result]::after{
+  content:attr(data-glyph);
+  position:absolute;top:-10px;right:-6px;
+  font-family:var(--body);font-weight:800;font-size:.85rem;
+  background:var(--surface);border:2px solid currentColor;color:inherit;
+  border-radius:999px;width:24px;height:24px;display:grid;place-items:center;
+}
+.climber{display:flex;justify-content:center;margin-top:14px}
+.climber .mascot{width:74px;transition:transform .3s cubic-bezier(.3,1.5,.5,1)}
+
+/* sorting */
+.sort-rows{display:grid;gap:10px;margin-top:16px}
+.sort-row{
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  border:3px solid var(--line);border-radius:var(--r-md);
+  background:var(--surface-2);padding:10px 12px;
+}
+.sort-num{font-family:var(--display);font-weight:800;font-size:1.7rem;min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+.sort-choices{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.sort-pick{
+  border:3px solid var(--line-strong);background:var(--surface);
+  border-radius:999px;padding:8px 16px;font-weight:800;cursor:pointer;
+  font-size:.95rem;transition:background .12s ease,border-color .12s ease;
+}
+.sort-pick[aria-pressed="true"]{background:color-mix(in srgb,var(--world) 20%, var(--surface));border-color:var(--world-dark)}
+.sort-row[data-result="right"]{border-color:var(--good);background:var(--good-soft)}
+.sort-row[data-result="wrong"]{border-color:var(--bad);background:var(--bad-soft)}
+.sort-verdict{font-weight:800;font-size:.9rem}
+
+/* feedback */
+.feedback{
+  margin-top:16px;border-radius:var(--r-md);
+  border:3px solid var(--line);background:var(--surface-2);
+  padding:14px 16px;display:grid;gap:6px;
+}
+.feedback[data-tone="right"]{border-color:var(--good);background:var(--good-soft)}
+.feedback[data-tone="wrong"]{border-color:var(--bad);background:var(--bad-soft)}
+.feedback[data-tone="time"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 16%, var(--surface))}
+.fb-head{font-family:var(--display);font-weight:800;font-size:1.25rem;display:flex;align-items:center;gap:8px}
+.fb-body{font-weight:600;line-height:1.5}
+.fb-body b{font-weight:800}
+.fb-reward{font-weight:800;font-size:.95rem;color:var(--ink-soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;align-items:center}
+.actions .spacer{margin-left:auto}
+
+/* teaching card */
+.teach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:14px}
+.teach-box{
+  border:3px solid var(--line);border-radius:var(--r-md);
+  background:var(--surface-2);padding:14px 16px;display:grid;gap:6px;
+}
+.teach-box .tb-title{font-family:var(--display);font-weight:800;font-size:1.05rem;display:flex;gap:7px;align-items:center}
+.teach-box .tb-maths{font-family:var(--display);font-weight:800;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.teach-box .tb-text{font-weight:600;font-size:.95rem;color:var(--ink-soft)}
+.arrow-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:700;margin-top:6px}
+.arrow-row .tag{border:2px solid var(--line-strong);border-radius:999px;padding:3px 11px;background:var(--surface);font-size:.9rem}
+
+/* boss */
+.boss-stage{
+  border:3px solid var(--citadel-dark);
+  border-radius:var(--r-lg);
+  background:radial-gradient(80% 100% at 50% 0%, color-mix(in srgb,var(--citadel) 26%, transparent), transparent 70%),var(--surface);
+  padding:18px;display:grid;gap:12px;justify-items:center;
+  box-shadow:var(--shadow-card);
+}
+.monster{width:clamp(130px,28vw,190px);height:auto}
+.monster.hit{animation:hit .45s ease}
+@keyframes hit{0%,100%{transform:translateX(0) scale(1)}25%{transform:translateX(-9px) scale(.96)}50%{transform:translateX(9px) scale(1.02)}75%{transform:translateX(-5px)}}
+.hp-wrap{width:min(420px,100%);display:grid;gap:5px}
+.hp-bar{height:20px;border:3px solid var(--ink);border-radius:999px;background:var(--surface-2);overflow:hidden}
+.hp-fill{height:100%;width:100%;background:var(--berry);transition:width .5s cubic-bezier(.3,1.2,.5,1)}
+.hp-label{display:flex;justify-content:space-between;font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums}
+
+/* results */
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.result-tile{
+  border:3px solid var(--line);border-radius:var(--r-md);
+  background:var(--surface-2);padding:14px;text-align:center;
+}
+.result-tile .rt-num{font-family:var(--display);font-weight:800;font-size:2.1rem;font-variant-numeric:tabular-nums;line-height:1.05}
+.result-tile .rt-lab{font-weight:700;font-size:.82rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft)}
+.new-badge{
+  display:flex;align-items:center;gap:10px;margin-top:14px;
+  border:3px solid var(--gold);border-radius:var(--r-md);
+  background:color-mix(in srgb,var(--gold) 18%, var(--surface));
+  padding:12px 16px;font-weight:800;
+}
+.new-badge .nb-ico{font-size:1.7rem}
+
+/* practice menu */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:16px}
+.topic-btn{
+  border:3px solid var(--ink);border-radius:var(--r-md);background:var(--surface);
+  padding:16px;cursor:pointer;text-align:left;display:grid;gap:3px;
+  box-shadow:0 5px 0 var(--ink);transition:transform .12s ease, box-shadow .12s ease;
+}
+.topic-btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 var(--ink)}
+.topic-btn:active{transform:translateY(2px);box-shadow:0 3px 0 var(--ink)}
+.topic-btn strong{font-family:var(--display);font-size:1.15rem;font-weight:800}
+.topic-btn span{font-size:.9rem;color:var(--ink-soft);font-weight:600}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.toast-layer{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:grid;gap:8px;z-index:40;pointer-events:none;width:min(440px,calc(100% - 32px))}
+.toast{
+  background:var(--ink);color:var(--paper);
+  border-radius:999px;padding:10px 20px;font-weight:800;text-align:center;
+  animation:toast-in .3s ease both;
+  box-shadow:0 6px 18px rgba(0,0,0,.2);
+}
+@keyframes toast-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+@media (max-width:640px){
+  .hero{grid-template-columns:1fr;text-align:center;justify-items:center}
+  .map-nodes{grid-template-columns:1fr}
+  .map-route{display:none}
+  .stone{width:68px;height:68px;font-size:1.3rem}
+  .card{padding:18px 15px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  .btn:hover,.menu-btn:hover,.opt:hover:not(:disabled),.world-node:hover:not(:disabled){transform:none}
+}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <header class="hud">
+    <span class="hud-brand">🌈 Factor Quest</span>
+    <button class="icon-btn" id="btn-home-hud" type="button" title="Home screen" aria-label="Home screen">🏠</button>
+    <button class="icon-btn" id="btn-sound" type="button" title="Sound on or off" aria-label="Sound on or off" aria-pressed="true">🔊</button>
+    <div class="hud-stats">
+      <span class="stat" title="Stars"><span class="stat-ico" aria-hidden="true">⭐</span><span id="hud-stars">0</span><span class="sr-only">stars</span></span>
+      <span class="stat" title="Coins"><span class="stat-ico" aria-hidden="true">🪙</span><span id="hud-coins">0</span><span class="sr-only">coins</span></span>
+      <span class="stat is-streak" id="hud-streak-wrap" data-hot="false" title="Streak"><span class="stat-ico" aria-hidden="true">🔥</span><span id="hud-streak">0</span><span class="sr-only">streak</span></span>
+      <span class="stat" title="Badges"><span class="stat-ico" aria-hidden="true">🏅</span><span id="hud-badges">0</span><span class="sr-only">badges</span></span>
+    </div>
+  </header>
+
+  <main id="stage">
+    <!-- HOME -->
+    <section class="screen" id="screen-home">
+      <div class="hero">
+        <div>
+          <h1 class="hero-title">🌈 Factor Quest 🚀</h1>
+          <p class="hero-sub">The Number Explorer Adventure</p>
+          <div class="hero-meta">
+            <span class="chip">📘 Year 6 · Lesson 2.3</span>
+            <span class="chip">🎯 Common multiples &amp; common factors</span>
+          </div>
+          <p class="q-note">Travel through three worlds, collect stars and badges, and become a Number Explorer Master.</p>
+        </div>
+        <div class="mascot-wrap">
+          <div id="home-mascot" class="bob"></div>
+          <span class="mascot-name">Pip the Explorer</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="label">Choose your mode</p>
+        <div class="menu-grid" style="margin-top:12px">
+          <button class="menu-btn m-adventure" id="btn-adventure" type="button">
+            <strong>🗺️ Start Adventure</strong>
+            <span>Three worlds, in order. Unlock the Citadel and face the Number Monster.</span>
+          </button>
+          <button class="menu-btn m-practice" id="btn-practice" type="button">
+            <strong>🧠 Practice Mode</strong>
+            <span>Pick one topic. Take all the time you need — no timer.</span>
+          </button>
+          <button class="menu-btn m-challenge" id="btn-challenge" type="button">
+            <strong>🏆 Challenge Mode</strong>
+            <span>10 mixed questions from the whole lesson, against the clock.</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:baseline">
+          <p class="label">Adventure progress</p>
+          <span class="q-count" id="home-progress">0 of 3 worlds complete</span>
+          <button class="btn btn-quiet" id="btn-reset" type="button" style="margin-left:auto">🔄 Restart adventure</button>
+        </div>
+        <div class="badge-rail" id="badge-rail"></div>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section class="screen" id="screen-map" hidden>
+      <div class="quiz-bar">
+        <span class="world-chip">🗺️ Adventure Map</span>
+        <span class="q-count" id="map-progress"></span>
+        <button class="btn btn-quiet" id="btn-map-home" type="button" style="margin-left:auto">🏠 Home</button>
+      </div>
+      <div class="map">
+        <svg class="map-route" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M50 50 C 100 10, 130 90, 150 50 S 210 10, 250 50" fill="none" stroke="var(--line-strong)" stroke-width="3" stroke-dasharray="8 9" stroke-linecap="round"/>
+        </svg>
+        <div class="map-nodes" id="map-nodes"></div>
+      </div>
+      <div class="card">
+        <p class="label">Where you are</p>
+        <p class="q-note" id="map-hint" style="margin-top:6px"></p>
+      </div>
+    </section>
+
+    <!-- PRACTICE MENU -->
+    <section class="screen" id="screen-practice" hidden>
+      <div class="quiz-bar">
+        <span class="world-chip" style="background:var(--mountain);border-color:var(--mountain-dark)">🧠 Practice Mode</span>
+        <button class="btn btn-quiet" id="btn-practice-home" type="button" style="margin-left:auto">🏠 Home</button>
+      </div>
+      <div class="card">
+        <h2 style="font-size:1.5rem">Choose what to practise</h2>
+        <p class="q-note">8 questions, no timer. You can try again as often as you like.</p>
+        <div class="topic-grid" id="topic-grid"></div>
+      </div>
+    </section>
+
+    <!-- TEACH -->
+    <section class="screen" id="screen-teach" hidden>
+      <div class="quiz-bar">
+        <span class="world-chip" id="teach-chip"></span>
+        <button class="btn btn-quiet" id="btn-teach-home" type="button" style="margin-left:auto">🏠 Home</button>
+      </div>
+      <div class="card" id="teach-card"></div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="screen" id="screen-quiz" hidden>
+      <div class="quiz-bar">
+        <span class="world-chip" id="quiz-chip"></span>
+        <span class="q-count" id="quiz-count"></span>
+        <span class="level-pill" id="quiz-level"></span>
+        <div class="timer" id="quiz-timer" hidden>
+          <span aria-hidden="true">⏱️</span>
+          <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+          <span class="timer-num" id="timer-num">40s</span>
+        </div>
+        <button class="btn btn-quiet" id="btn-quiz-home" type="button">🏠 Home</button>
+      </div>
+
+      <div id="boss-stage-slot"></div>
+
+      <div class="trail" id="trail" aria-hidden="true"></div>
+
+      <div class="card">
+        <div class="q-instruction">
+          <span class="label" id="q-instruction">Choose one answer</span>
+        </div>
+        <div id="q-body"></div>
+        <div id="q-options"></div>
+        <div id="q-feedback" role="status" aria-live="polite"></div>
+        <div class="actions" id="q-actions"></div>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="screen" id="screen-results" hidden>
+      <div class="card" id="results-card"></div>
+    </section>
+  </main>
+</div>
+<div class="toast-layer" id="toast-layer" aria-live="polite"></div>
+
+<script>
+/* ===========================================================
+   FACTOR QUEST — The Number Explorer Adventure
+   Year 6 · Lesson 2.3 · Cambridge 6Ni.06
+   Every question is generated, then mathematically validated
+   before it is ever shown to a student.
+   =========================================================== */
+(function () {
+  "use strict";
+
+  /* ---------------- 1. MATHS ENGINE ---------------- */
+  const isWhole = (x) => Number.isFinite(x) && Number.isInteger(x);
+
+  function factors(n) {
+    const out = [];
+    if (!isWhole(n) || n < 1) return out;
+    for (let d = 1; d * d <= n; d++) {
+      if (n % d === 0) {
+        out.push(d);
+        if (d !== n / d) out.push(n / d);
+      }
+    }
+    return out.sort((a, b) => a - b);
+  }
+  const isFactorOf = (d, n) => isWhole(d) && isWhole(n) && d > 0 && n > 0 && n % d === 0;
+  const isMultipleOf = (m, k) => isWhole(m) && isWhole(k) && k > 0 && m > 0 && m % k === 0;
+  const commonFactors = (a, b) => factors(a).filter((f) => b % f === 0);
+  const multiplesOf = (k, count, from) => {
+    const out = [];
+    const s = from || 1;
+    for (let i = s; i < s + count; i++) out.push(k * i);
+    return out;
+  };
+  function gcd(a, b) { while (b) { const t = a % b; a = b; b = t; } return a; }
+  function lcm(a, b) { return (a / gcd(a, b)) * b; }
+  function commonMultiples(a, b, max) {
+    const L = lcm(a, b), out = [];
+    for (let m = L; m <= max; m += L) out.push(m);
+    return out;
+  }
+
+  /* ---------------- 2. SMALL HELPERS ---------------- */
+  const rnd = (n) => Math.floor(Math.random() * n);
+  const pick = (arr) => arr[rnd(arr.length)];
+  const shuffle = (arr) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); const t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  };
+  const uniq = (a) => Array.from(new Set(a));
+  function listStr(arr) {
+    const a = arr.slice();
+    if (!a.length) return "none";
+    if (a.length === 1) return String(a[0]);
+    return a.slice(0, -1).join(", ") + " and " + a[a.length - 1];
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+  const NAMES = ["Sam", "Maya", "Leo", "Zara", "Ollie", "Nia", "Theo", "Amira", "Jonah", "Priya"];
+
+  /* ---------------- 3. VALIDATION GATE ---------------- */
+  const BAD = /NaN|undefined|Infinity|null/;
+
+  function validate(q) {
+    if (!q || typeof q !== "object") return false;
+    if (!q.kind || !q.stem || !q.instruction) return false;
+    const textBlob = [q.stem, q.instruction, q.maths || "", q.note || "", q.right || ""].join(" ");
+    if (BAD.test(textBlob)) return false;
+
+    if (q.kind === "sort") {
+      if (!Array.isArray(q.items) || q.items.length < 3) return false;
+      const labels = q.items.map((i) => String(i.n));
+      if (uniq(labels).length !== labels.length) return false;
+      return q.items.every((i) => isWhole(i.n) && (i.answer === "factor" || i.answer === "multiple"));
+    }
+    if (q.kind === "path") {
+      if (!Array.isArray(q.stones) || q.stones.length < 6) return false;
+      const labels = q.stones.map((s) => String(s.n));
+      if (uniq(labels).length !== labels.length) return false;
+      if (!q.stones.some((s) => s.good) || !q.stones.some((s) => !s.good)) return false;
+      return q.stones.every((s) => isWhole(s.n) && typeof s.good === "boolean");
+    }
+
+    if (!Array.isArray(q.options) || q.options.length < 2) return false;
+    const labels = q.options.map((o) => String(o.label));
+    if (uniq(labels).length !== labels.length) return false;
+    if (labels.some((l) => !l.trim() || BAD.test(l))) return false;
+    const nRight = q.options.filter((o) => o.correct).length;
+    if (q.kind === "choice" || q.kind === "yesno") return nRight === 1;
+    if (q.kind === "select") return nRight >= 1 && nRight < q.options.length;
+    return false;
+  }
+
+  /* Generate → validate → retry. Never shows an unvalidated question. */
+  function make(fn, level, extra) {
+    for (let i = 0; i < 120; i++) {
+      let q = null;
+      try { q = fn(level, extra); } catch (e) { q = null; }
+      if (q && validate(q)) return q;
+    }
+    // Deterministic, hand-verified safety net (should never be reached).
+    const F = factors(12);
+    return {
+      kind: "select", topic: "factors", level: 1,
+      instruction: "Select all that apply",
+      stem: "Which numbers are factors of 12?",
+      optionStyle: "num",
+      options: [1, 2, 5, 3, 7, 4, 6, 12].sort((a, b) => a - b).map((n) => ({ label: String(n), value: n, correct: F.indexOf(n) > -1 })),
+      right: "The factors of 12 are " + listStr(F) + ".",
+      wrong: () => "Check each number: it is a factor of 12 only if 12 divided by it gives a whole number.",
+    };
+  }
+
+  /* ---------------- 4. NUMBER POOLS ---------------- */
+  const POOL = {
+    factorN: { 1: [12, 15, 16, 18, 20], 2: [24, 28, 30, 32, 36], 3: [40, 42, 48, 54, 60], 4: [72, 80, 84, 90, 96] },
+    findAll: { 1: [12, 18], 2: [24, 36], 3: [48, 60, 72], 4: [84, 96, 100] },
+    cfPair: {
+      1: [[8, 12], [6, 9], [10, 15], [9, 12]],
+      2: [[12, 18], [16, 24], [18, 24], [20, 30]],
+      3: [[24, 36], [30, 45], [28, 42], [36, 48]],
+      4: [[48, 72], [60, 90], [56, 84], [72, 96]],
+    },
+    cmPair: {
+      1: [[2, 3], [2, 5], [3, 4], [2, 7]],
+      2: [[4, 6], [3, 8], [6, 9], [4, 10]],
+      3: [[6, 8], [9, 12], [8, 10], [6, 15]],
+      4: [[8, 12], [10, 15], [12, 18], [9, 15]],
+    },
+    mult: { 1: [2, 3, 4, 5], 2: [4, 6, 7, 8], 3: [6, 7, 8, 9], 4: [7, 8, 9, 11, 12] },
+  };
+  const lv = (level) => Math.min(4, Math.max(1, level | 0));
+  const poolPick = (table, level) => pick(table[lv(level)]);
+
+  /* ---------------- 5. QUESTION GENERATORS ---------------- */
+  const G = {};
+
+  /* 5.1 Select all factors of n */
+  G.factorsSelect = function (level, opts) {
+    const o = opts || {};
+    const n = o.n || poolPick(o.findAll ? POOL.findAll : POOL.factorN, level);
+    const F = factors(n);
+    const nonFactors = [];
+    for (let d = 2; d <= n; d++) if (n % d !== 0) nonFactors.push(d);
+    const near = [];
+    F.forEach((f) => { [f + 1, f - 1, f + 2].forEach((c) => { if (c > 1 && c <= n && n % c !== 0) near.push(c); }); });
+    const wantTiles = Math.min(16, F.length + 4);
+    let distract = shuffle(uniq(near)).slice(0, Math.max(0, wantTiles - F.length));
+    if (distract.length < wantTiles - F.length) {
+      distract = uniq(distract.concat(shuffle(nonFactors).slice(0, wantTiles - F.length)));
+    }
+    const values = uniq(F.concat(distract)).sort((a, b) => a - b);
+    if (values.length < F.length + 3) return null;
+    return {
+      kind: "select", topic: "factors", level: lv(level),
+      instruction: "Select all that apply",
+      stem: (o.findAll ? "Find all the factors of " : "Which of these numbers are factors of ") + n + "?",
+      note: o.findAll ? "Every factor of " + n + " is somewhere in this list." : "",
+      optionStyle: "num",
+      options: values.map((v) => ({ label: String(v), value: v, correct: n % v === 0 })),
+      right: "The factors of " + n + " are " + listStr(F) + ". Each one divides into " + n + " exactly.",
+      wrong: function (chosen) {
+        const extra = chosen.filter((c) => n % c !== 0);
+        const missed = F.filter((f) => values.indexOf(f) > -1 && chosen.indexOf(f) < 0);
+        const bits = [];
+        if (extra.length) bits.push("<b>" + extra[0] + "</b> is not a factor of " + n + ", because " + n + " ÷ " + extra[0] + " does not give a whole number.");
+        if (missed.length) bits.push("You still need <b>" + listStr(missed) + "</b> — for example " + n + " ÷ " + missed[0] + " = " + (n / missed[0]) + ".");
+        if (!bits.length) bits.push("Check every tile: a number is a factor of " + n + " only if " + n + " divides by it exactly.");
+        return bits.join(" ");
+      },
+    };
+  };
+
+  /* 5.2 Factor pairs */
+  G.factorPair = function (level) {
+    const n = poolPick(POOL.factorN, level);
+    const F = factors(n);
+    const pairs = [];
+    F.forEach((f) => { if (f * f <= n && (lv(level) === 1 || f > 1)) pairs.push([f, n / f]); });
+    if (!pairs.length) return null;
+    const right = pick(pairs);
+    const used = [right[0] + "×" + right[1]];
+    const distract = [];
+    let guard = 0;
+    while (distract.length < 3 && guard++ < 300) {
+      const c = 2 + rnd(11), d = 2 + rnd(13);
+      if (c * d === n) continue;
+      const key = c + "×" + d;
+      if (used.indexOf(key) > -1) continue;
+      if (Math.abs(c * d - n) > n * 0.6) continue;
+      used.push(key);
+      distract.push([c, d]);
+    }
+    if (distract.length < 3) return null;
+    const all = shuffle([{ p: right, correct: true }].concat(distract.map((p) => ({ p: p, correct: false }))));
+    return {
+      kind: "choice", topic: "factors", level: lv(level),
+      instruction: "Choose one answer",
+      stem: "Which of these is a factor pair of " + n + "?",
+      optionStyle: "two",
+      options: all.map((x) => ({ label: x.p[0] + " × " + x.p[1], value: x.p, correct: x.correct })),
+      right: right[0] + " × " + right[1] + " = " + n + ", so " + right[0] + " and " + right[1] + " are both factors of " + n + ".",
+      wrong: function (chosen) {
+        const c = chosen[0];
+        return "<b>" + c[0] + " × " + c[1] + " = " + c[0] * c[1] + "</b>, not " + n + ". A factor pair must multiply to give " + n + " exactly.";
+      },
+    };
+  };
+
+  /* 5.3 Missing factor */
+  G.missingFactor = function (level) {
+    const n = poolPick(POOL.factorN, level);
+    const F = factors(n).filter((f) => f > 1 && f < n);
+    if (!F.length) return null;
+    const a = pick(F), b = n / a;
+    const front = Math.random() < 0.5;
+    const answer = front ? b : a;
+    const known = front ? a : b;
+    const cands = uniq([answer + 1, answer - 1, answer + 2, answer - 2, answer + 3].filter((x) => x > 0 && x !== answer && known * x !== n));
+    if (cands.length < 3) return null;
+    const distract = shuffle(cands).slice(0, 3);
+    const opts = shuffle([answer].concat(distract));
+    return {
+      kind: "choice", topic: "factors", level: lv(level),
+      instruction: "Choose the missing number",
+      stem: "Find the missing factor.",
+      maths: front
+        ? esc(known) + ' <span aria-hidden="true">×</span> <span class="blank">?</span> = ' + esc(n)
+        : '<span class="blank">?</span> <span aria-hidden="true">×</span> ' + esc(known) + " = " + esc(n),
+      optionStyle: "num",
+      options: opts.map((v) => ({ label: String(v), value: v, correct: v === answer })),
+      right: n + " ÷ " + known + " = " + answer + ", so the missing factor is " + answer + ". " + a + " × " + b + " = " + n + ".",
+      wrong: function (chosen) {
+        const c = chosen[0];
+        return "<b>" + known + " × " + c + " = " + known * c + "</b>, not " + n + ". Try dividing: " + n + " ÷ " + known + ".";
+      },
+    };
+  };
+
+  /* 5.4 Spot the mistake (yes / no) */
+  G.spotMistake = function (level, opts) {
+    const o = opts || {};
+    const style = o.style || pick(["factor", "multiple", "cfactor", "cmultiple"]);
+    const name = pick(NAMES);
+    let claim = "", truth = false, why = "", topic = "factors";
+
+    if (style === "factor") {
+      const n = poolPick(POOL.factorN, level);
+      const F = factors(n);
+      const useTrue = Math.random() < 0.5;
+      const d = useTrue ? pick(F.filter((f) => f > 1)) : pick(shuffle([2, 3, 4, 5, 6, 7, 8, 9, 10, 11].filter((x) => n % x !== 0)));
+      if (!isWhole(d)) return null;
+      truth = n % d === 0;
+      claim = d + " is a factor of " + n + ".";
+      why = truth
+        ? d + " × " + n / d + " = " + n + ", so " + n + " ÷ " + d + " = " + n / d + " exactly — " + d + " really is a factor of " + n + "."
+        : n + " ÷ " + d + " does not give a whole number, so " + d + " is not a factor of " + n + ".";
+      topic = "factors";
+    } else if (style === "multiple") {
+      const k = poolPick(POOL.mult, level);
+      const useTrue = Math.random() < 0.5;
+      const m = useTrue ? k * (3 + rnd(7)) : k * (3 + rnd(7)) + (1 + rnd(k - 1));
+      truth = m % k === 0;
+      claim = m + " is a multiple of " + k + ".";
+      why = truth
+        ? k + " × " + m / k + " = " + m + ", so " + m + " is a multiple of " + k + "."
+        : m + " ÷ " + k + " does not give a whole number, so " + m + " is not a multiple of " + k + ". The nearest multiples are " + k * Math.floor(m / k) + " and " + k * (Math.floor(m / k) + 1) + ".";
+      topic = "multiples";
+    } else if (style === "cfactor") {
+      const pr = poolPick(POOL.cfPair, level), a = pr[0], b = pr[1];
+      const cf = commonFactors(a, b);
+      const onlyA = factors(a).filter((f) => b % f !== 0);
+      const useTrue = Math.random() < 0.5 || !onlyA.length;
+      const d = useTrue ? pick(cf.filter((f) => f > 1).length ? cf.filter((f) => f > 1) : cf) : pick(onlyA);
+      if (!isWhole(d)) return null;
+      truth = a % d === 0 && b % d === 0;
+      claim = d + " is a common factor of " + a + " and " + b + ".";
+      why = truth
+        ? a + " ÷ " + d + " = " + a / d + " and " + b + " ÷ " + d + " = " + b / d + ", so " + d + " is a factor of both."
+        : (a % d === 0
+          ? d + " is a factor of " + a + ", but " + b + " ÷ " + d + " is not a whole number, so it is not a common factor."
+          : d + " is not a factor of " + a + " at all, so it cannot be a common factor.");
+      topic = "cfactors";
+    } else {
+      const pr = poolPick(POOL.cmPair, level), a = pr[0], b = pr[1];
+      const L = lcm(a, b);
+      const useTrue = Math.random() < 0.5;
+      const m = useTrue ? L * (1 + rnd(3)) : a * (2 + rnd(6));
+      if (!useTrue && m % b === 0) return null;
+      truth = m % a === 0 && m % b === 0;
+      claim = m + " is a common multiple of " + a + " and " + b + ".";
+      why = truth
+        ? m + " ÷ " + a + " = " + m / a + " and " + m + " ÷ " + b + " = " + m / b + ", so " + m + " is a multiple of both."
+        : (m % a === 0
+          ? m + " is a multiple of " + a + ", but " + m + " ÷ " + b + " is not a whole number — so it is not a common multiple."
+          : m + " is not a multiple of " + a + ", so it cannot be a common multiple.");
+      topic = "cmultiples";
+    }
+
+    return {
+      kind: "yesno", topic: topic, level: lv(level),
+      instruction: "Is this correct?",
+      stem: name + " says:",
+      quote: "“" + claim + "”",
+      optionStyle: "two",
+      options: [
+        { label: "✅ Yes, correct", value: true, correct: truth === true },
+        { label: "❌ No, not correct", value: false, correct: truth === false },
+      ],
+      right: (truth ? name + " is right. " : name + " has made a mistake. ") + why,
+      wrong: function () { return (truth ? name + " is actually right. " : name + " is actually wrong. ") + why; },
+    };
+  };
+
+  /* 5.5 Common factors — select all */
+  G.commonFactorsSelect = function (level) {
+    const pr = poolPick(POOL.cfPair, level), a = pr[0], b = pr[1];
+    const cf = commonFactors(a, b);
+    if (cf.length < 2) return null;
+    const onlyA = factors(a).filter((f) => b % f !== 0);
+    const onlyB = factors(b).filter((f) => a % f !== 0);
+    const neither = [];
+    for (let d = 2; d <= Math.max(a, b); d++) if (a % d !== 0 && b % d !== 0) neither.push(d);
+    const values = uniq(
+      cf.concat(shuffle(onlyA).slice(0, 2), shuffle(onlyB).slice(0, 2), shuffle(neither).slice(0, 2))
+    ).sort((x, y) => x - y);
+    if (values.length < cf.length + 2) return null;
+    return {
+      kind: "select", topic: "cfactors", level: lv(level),
+      instruction: "Select all that apply",
+      stem: "Which of these numbers are common factors of " + a + " and " + b + "?",
+      optionStyle: "num",
+      options: values.map((v) => ({ label: String(v), value: v, correct: a % v === 0 && b % v === 0 })),
+      right:
+        "Factors of " + a + ": " + listStr(factors(a)) + ".<br>Factors of " + b + ": " + listStr(factors(b)) +
+        ".<br>The numbers in <b>both</b> lists are the common factors: <b>" + listStr(cf) + "</b>.",
+      wrong: function (chosen) {
+        const extra = chosen.filter((c) => !(a % c === 0 && b % c === 0));
+        const missed = cf.filter((c) => chosen.indexOf(c) < 0);
+        const bits = [];
+        if (extra.length) {
+          const e = extra[0];
+          bits.push(a % e === 0
+            ? "<b>" + e + "</b> is a factor of " + a + ", but " + b + " ÷ " + e + " is not a whole number — so it is not common to both."
+            : "<b>" + e + "</b> is not a factor of " + a + ", so it cannot be a common factor.");
+        }
+        if (missed.length) {
+          const m = missed[0];
+          bits.push("You missed <b>" + listStr(missed) + "</b>: " + a + " ÷ " + m + " = " + a / m + " and " + b + " ÷ " + m + " = " + b / m + ".");
+        }
+        if (!bits.length) bits.push("A common factor must divide exactly into " + a + " <i>and</i> " + b + ".");
+        return bits.join(" ");
+      },
+    };
+  };
+
+  /* 5.6 Stepping stones — identify multiples */
+  G.multiplePath = function (level) {
+    const k = poolPick(POOL.mult, level);
+    const stones = [];
+    for (let i = 1; i <= 5; i++) {
+      stones.push({ n: k * i, good: true });
+      if (i < 5) {
+        let gap = k * i + 1 + rnd(Math.max(1, k - 1));
+        if (gap % k === 0) gap += 1;
+        if (gap % k !== 0 && gap < k * (i + 1)) stones.push({ n: gap, good: false });
+      }
+    }
+    const seen = {};
+    const clean = stones.filter((s) => { if (seen[s.n]) return false; seen[s.n] = 1; return true; }).sort((x, y) => x.n - y.n);
+    if (clean.filter((s) => !s.good).length < 3) return null;
+    return {
+      kind: "path", topic: "multiples", level: lv(level),
+      instruction: "Tap every stone that is a multiple of " + k,
+      stem: "Help Pip climb the mountain using only the multiples of " + k + ".",
+      k: k,
+      stones: clean,
+      right: "The multiples of " + k + " are " + listStr(multiplesOf(k, 5)) + " — you count up in " + k + "s.",
+      wrong: function (n) {
+        return "<b>" + n + "</b> is not a multiple of " + k + ": " + n + " ÷ " + k + " does not give a whole number. Keep counting up in " + k + "s.";
+      },
+    };
+  };
+
+  /* 5.7 + 5.8 Sequences (complete / missing) */
+  G.sequence = function (level, opts) {
+    const o = opts || {};
+    const k = poolPick(POOL.mult, level);
+    const start = 1 + rnd(3);
+    const terms = multiplesOf(k, 5, start);
+    const blank = o.first ? 0 : 1 + rnd(3);
+    const answer = terms[blank];
+    const cands = uniq([answer + 1, answer - 1, answer + 2, answer - k + 1, answer + k - 1].filter(
+      (x) => x > 0 && x !== answer && terms.indexOf(x) < 0
+    ));
+    if (cands.length < 3) return null;
+    const opts4 = shuffle([answer].concat(shuffle(cands).slice(0, 3)));
+    const shown = terms.map((t, i) => (i === blank ? '<span class="blank">?</span>' : '<span class="seq-term">' + t + "</span>")).join(
+      '<span aria-hidden="true">,</span> '
+    );
+    const before = blank > 0 ? terms[blank - 1] : null;
+    return {
+      kind: "choice", topic: "multiples", level: lv(level),
+      instruction: "Choose the missing number",
+      stem: o.first ? "Which multiple is missing from the start?" : "Complete the sequence of multiples.",
+      maths: shown,
+      note: "This is a sequence of multiples of " + k + ".",
+      optionStyle: "num",
+      options: opts4.map((v) => ({ label: String(v), value: v, correct: v === answer })),
+      right: before
+        ? "The numbers go up in " + k + "s: " + before + " + " + k + " = <b>" + answer + "</b>. (" + k + " × " + (start + blank) + " = " + answer + ".)"
+        : "The numbers go up in " + k + "s, so before " + terms[1] + " comes " + terms[1] + " − " + k + " = <b>" + answer + "</b>.",
+      wrong: function (chosen) {
+        const c = chosen[0];
+        return "<b>" + c + "</b> breaks the pattern — " + (c % k === 0 ? "it is a multiple of " + k + ", but it is not in the right place." : c + " ÷ " + k + " is not a whole number, so it is not a multiple of " + k + " at all.");
+      },
+    };
+  };
+
+  /* 5.9 Which number is a multiple? */
+  G.whichMultiple = function (level) {
+    const k = poolPick(POOL.mult, level);
+    const m = 3 + rnd(7);
+    const answer = k * m;
+    const cands = [];
+    for (let d = -6; d <= 6; d++) {
+      const x = answer + d;
+      if (x > 1 && x % k !== 0) cands.push(x);
+    }
+    if (cands.length < 3) return null;
+    const opts = shuffle([answer].concat(shuffle(uniq(cands)).slice(0, 3)));
+    return {
+      kind: "choice", topic: "multiples", level: lv(level),
+      instruction: "Choose one answer",
+      stem: "Which of these numbers is a multiple of " + k + "?",
+      optionStyle: "num",
+      options: opts.map((v) => ({ label: String(v), value: v, correct: v % k === 0 })),
+      right: k + " × " + m + " = " + answer + ", so <b>" + answer + "</b> is a multiple of " + k + ".",
+      wrong: function (chosen) {
+        const c = chosen[0];
+        const lo = k * Math.floor(c / k), hi = lo + k;
+        return "<b>" + c + "</b> ÷ " + k + " does not give a whole number. " + c + " sits between the multiples " + lo + " and " + hi + ".";
+      },
+    };
+  };
+
+  /* 5.10 Common multiple — one answer */
+  G.commonMultipleChoice = function (level, opts) {
+    const o = opts || {};
+    const pr = poolPick(POOL.cmPair, level), a = pr[0], b = pr[1];
+    const L = lcm(a, b);
+    const answer = L * (1 + rnd(2));
+    const onlyA = [], onlyB = [], neither = [];
+    for (let i = 2; i <= 12; i++) {
+      const x = a * i; if (x % b !== 0 && x !== answer) onlyA.push(x);
+      const y = b * i; if (y % a !== 0 && y !== answer) onlyB.push(y);
+    }
+    for (let i = 0; i < 40; i++) {
+      const x = 6 + rnd(Math.max(20, answer));
+      if (x % a !== 0 && x % b !== 0) neither.push(x);
+    }
+    if (!onlyA.length || !onlyB.length || !neither.length) return null;
+    const chosen = uniq([answer, pick(onlyA), pick(onlyB), pick(neither)]);
+    if (chosen.length < 4) return null;
+    if (chosen.filter((x) => x % a === 0 && x % b === 0).length !== 1) return null;
+    return {
+      kind: "choice", topic: "cmultiples", level: lv(level),
+      instruction: "Choose one answer",
+      stem: o.could
+        ? "A number is a multiple of both " + a + " and " + b + ". Which number could it be?"
+        : "Which of these is a common multiple of " + a + " and " + b + "?",
+      optionStyle: "num",
+      options: shuffle(chosen).map((v) => ({ label: String(v), value: v, correct: v % a === 0 && v % b === 0 })),
+      right: answer + " ÷ " + a + " = " + answer / a + " and " + answer + " ÷ " + b + " = " + answer / b + ", so <b>" + answer + "</b> is a multiple of both.",
+      wrong: function (ch) {
+        const c = ch[0];
+        if (c % a === 0) return "<b>" + c + "</b> is a multiple of " + a + ", but " + c + " ÷ " + b + " is not a whole number — a common multiple must be in <i>both</i> lists.";
+        if (c % b === 0) return "<b>" + c + "</b> is a multiple of " + b + ", but " + c + " ÷ " + a + " is not a whole number — a common multiple must be in <i>both</i> lists.";
+        return "<b>" + c + "</b> is not a multiple of " + a + " or of " + b + ". Count up in " + a + "s and in " + b + "s and look for a number in both lists.";
+      },
+    };
+  };
+
+  /* 5.11 Common multiples — select all */
+  G.commonMultiplesSelect = function (level) {
+    const pr = poolPick(POOL.cmPair, level), a = pr[0], b = pr[1];
+    const L = lcm(a, b);
+    const cms = commonMultiples(a, b, L * 3);
+    if (cms.length < 2) return null;
+    const onlyA = [], onlyB = [], neither = [];
+    for (let i = 1; i <= 14; i++) {
+      const x = a * i; if (x % b !== 0) onlyA.push(x);
+      const y = b * i; if (y % a !== 0) onlyB.push(y);
+    }
+    for (let i = 0; i < 60; i++) { const x = 5 + rnd(L * 3); if (x % a !== 0 && x % b !== 0) neither.push(x); }
+    const values = uniq(
+      cms.slice(0, 2).concat(shuffle(onlyA).slice(0, 2), shuffle(onlyB).slice(0, 2), shuffle(neither).slice(0, 2))
+    ).sort((x, y) => x - y);
+    const nRight = values.filter((v) => v % a === 0 && v % b === 0).length;
+    if (nRight < 2 || nRight >= values.length) return null;
+    return {
+      kind: "select", topic: "cmultiples", level: lv(level),
+      instruction: "Select all that apply",
+      stem: "Which of these numbers are common multiples of " + a + " and " + b + "?",
+      optionStyle: "num",
+      options: values.map((v) => ({ label: String(v), value: v, correct: v % a === 0 && v % b === 0 })),
+      right:
+        "Multiples of " + a + ": " + listStr(multiplesOf(a, 6)) + " …<br>Multiples of " + b + ": " + listStr(multiplesOf(b, 6)) +
+        " …<br>Numbers that appear in both lists are common multiples: <b>" + listStr(values.filter((v) => v % a === 0 && v % b === 0)) + "</b>.",
+      wrong: function (chosen) {
+        const extra = chosen.filter((c) => !(c % a === 0 && c % b === 0));
+        const missed = values.filter((v) => v % a === 0 && v % b === 0 && chosen.indexOf(v) < 0);
+        const bits = [];
+        if (extra.length) {
+          const e = extra[0];
+          bits.push("<b>" + e + "</b> " + (e % a === 0 ? "is a multiple of " + a + " but not of " + b : e % b === 0 ? "is a multiple of " + b + " but not of " + a : "is not a multiple of either number") + ".");
+        }
+        if (missed.length) bits.push("You missed <b>" + listStr(missed) + "</b> — it divides exactly by both " + a + " and " + b + ".");
+        if (!bits.length) bits.push("A common multiple must divide exactly by " + a + " and by " + b + ".");
+        return bits.join(" ");
+      },
+    };
+  };
+
+  /* 5.12 Which statement is correct / incorrect (factor vs multiple) */
+  function statementBank(p, q) {
+    return [
+      { t: p + " is a factor of " + q + ".", v: isFactorOf(p, q) },
+      { t: q + " is a multiple of " + p + ".", v: isMultipleOf(q, p) },
+      { t: p + " is a multiple of " + q + ".", v: isMultipleOf(p, q) },
+      { t: q + " is a factor of " + p + ".", v: isFactorOf(q, p) },
+      { t: p + " and " + q + " are factors of each other.", v: isFactorOf(p, q) && isFactorOf(q, p) },
+      { t: "1 is a factor of both " + p + " and " + q + ".", v: isFactorOf(1, p) && isFactorOf(1, q) },
+      { t: q + " is a factor of itself.", v: isFactorOf(q, q) },
+      { t: p + " is a common factor of " + p + " and " + q + ".", v: isFactorOf(p, p) && isFactorOf(p, q) },
+      { t: q + " is a common multiple of " + p + " and " + q + ".", v: isMultipleOf(q, p) && isMultipleOf(q, q) },
+      { t: p + " is a common multiple of " + p + " and " + q + ".", v: isMultipleOf(p, p) && isMultipleOf(p, q) },
+    ];
+  }
+  G.statement = function (level, opts) {
+    const o = opts || {};
+    const wantCorrect = o.wantCorrect !== false;
+    const p = 2 + rnd(10);
+    const t = 2 + rnd(8);
+    const q = p * t;
+    if (q > 120 || p === q) return null;
+    const bank = statementBank(p, q);
+    const trues = shuffle(bank.filter((s) => s.v));
+    const falses = shuffle(bank.filter((s) => !s.v));
+    if (trues.length < 3 || falses.length < 3) return null;
+    const chosen = wantCorrect
+      ? [Object.assign({ correct: true }, trues[0])].concat(falses.slice(0, 3).map((s) => Object.assign({ correct: false }, s)))
+      : [Object.assign({ correct: true }, falses[0])].concat(trues.slice(0, 3).map((s) => Object.assign({ correct: false }, s)));
+    const rel = p + " × " + t + " = " + q + ", so " + p + " is a factor of " + q + " and " + q + " is a multiple of " + p + ".";
+    return {
+      kind: "choice", topic: "reason", level: lv(level),
+      instruction: "Choose one answer",
+      stem: wantCorrect ? "Which statement is correct?" : "Which statement is incorrect?",
+      optionStyle: "text",
+      options: shuffle(chosen).map((s) => ({ label: s.t, value: s.t, correct: s.correct })),
+      right: rel,
+      wrong: function () { return rel + " Remember: the smaller number is the factor, the larger number is the multiple."; },
+    };
+  };
+
+  /* 5.13 Which statement is always true? (tested over a range) */
+  const UNIVERSALS = [
+    { t: "Every whole number is a factor of itself.", f: (n) => isFactorOf(n, n) },
+    { t: "1 is a factor of every whole number.", f: (n) => isFactorOf(1, n) },
+    { t: "Every whole number is a multiple of 1.", f: (n) => isMultipleOf(n, 1) },
+    { t: "Every multiple of 6 is also a multiple of 3.", f: (n) => !(n % 6 === 0 && n % 3 !== 0) },
+    { t: "Every factor of 12 is also a factor of 24.", f: (n) => !(isFactorOf(n, 12) && !isFactorOf(n, 24)) },
+    { t: "A number that is a multiple of 3 and of 5 is always a multiple of 15.", f: (n) => !(n % 3 === 0 && n % 5 === 0 && n % 15 !== 0) },
+    { t: "Every multiple of 4 is also a multiple of 8.", f: (n) => !(n % 4 === 0 && n % 8 !== 0) },
+    { t: "Every factor of 24 is also a factor of 12.", f: (n) => !(isFactorOf(n, 24) && !isFactorOf(n, 12)) },
+    { t: "A multiple of a number is always bigger than that number.", f: (n) => !(n * 1 === n) },
+    { t: "Every factor of a number is smaller than that number.", f: (n) => !isFactorOf(n, n) },
+    { t: "If a number is a factor of 20, it must also be a factor of 30.", f: (n) => !(isFactorOf(n, 20) && !isFactorOf(n, 30)) },
+    { t: "Every common factor of two numbers is also a common multiple of them.", f: (n) => !(isFactorOf(2, 8) && isFactorOf(2, 12) && !(isMultipleOf(2, 8) && isMultipleOf(2, 12))) },
+  ];
+  function testUniversal(u) { for (let n = 1; n <= 120; n++) { if (!u.f(n)) return false; } return true; }
+  G.alwaysTrue = function (level) {
+    const graded = UNIVERSALS.map((u) => ({ t: u.t, v: testUniversal(u) }));
+    const trues = shuffle(graded.filter((g) => g.v));
+    const falses = shuffle(graded.filter((g) => !g.v));
+    if (!trues.length || falses.length < 3) return null;
+    const chosen = [Object.assign({ correct: true }, trues[0])].concat(falses.slice(0, 3).map((g) => Object.assign({ correct: false }, g)));
+    const winner = trues[0].t;
+    return {
+      kind: "choice", topic: "reason", level: 4,
+      instruction: "Choose one answer",
+      stem: "Which statement is always true?",
+      optionStyle: "text",
+      options: shuffle(chosen).map((g) => ({ label: g.t, value: g.t, correct: g.correct })),
+      right: "<b>" + esc(winner) + "</b> This one holds for every whole number you try — the others can be beaten by a counter-example.",
+      wrong: function (ch) {
+        const c = ch[0];
+        const counter = {
+          "Every multiple of 4 is also a multiple of 8.": "12 is a multiple of 4, but 12 ÷ 8 is not a whole number.",
+          "Every factor of 24 is also a factor of 12.": "8 is a factor of 24, but 8 is not a factor of 12.",
+          "A multiple of a number is always bigger than that number.": "6 × 1 = 6, so 6 is a multiple of itself — not bigger.",
+          "Every factor of a number is smaller than that number.": "12 is a factor of 12, and it is not smaller.",
+          "If a number is a factor of 20, it must also be a factor of 30.": "4 is a factor of 20, but 4 is not a factor of 30.",
+          "Every common factor of two numbers is also a common multiple of them.": "2 is a common factor of 8 and 12, but it is far too small to be a multiple of either.",
+        }[c];
+        return (counter ? "Counter-example: " + counter + " " : "") + "The statement that always holds is: <b>" + esc(winner) + "</b>";
+      },
+    };
+  };
+
+  /* 5.14 Error analysis */
+  G.errorAnalysis = function (level, opts) {
+    const o = opts || {};
+    const style = o.style || pick(["cfIntruder", "missingFactor", "badMultiple"]);
+    const name = pick(NAMES);
+
+    if (style === "cfIntruder") {
+      const pr = poolPick(POOL.cfPair, level), a = pr[0], b = pr[1];
+      const cf = commonFactors(a, b);
+      const onlyA = factors(a).filter((f) => b % f !== 0);
+      if (cf.length < 3 || !onlyA.length) return null;
+      const intruder = pick(onlyA);
+      const shown = uniq(cf.concat([intruder])).sort((x, y) => x - y);
+      return {
+        kind: "choice", topic: "cfactors", level: lv(level),
+        instruction: "Choose one answer",
+        stem: name + " says the common factors of " + a + " and " + b + " are " + listStr(shown) + ". Which number should not be in the list?",
+        optionStyle: "num",
+        options: shuffle(shown).map((v) => ({ label: String(v), value: v, correct: v === intruder })),
+        right: "<b>" + intruder + "</b> is a factor of " + a + ", but " + b + " ÷ " + intruder + " is not a whole number. The common factors of " + a + " and " + b + " are " + listStr(cf) + ".",
+        wrong: function (ch) {
+          const c = ch[0];
+          return "<b>" + c + "</b> belongs in the list: " + a + " ÷ " + c + " = " + a / c + " and " + b + " ÷ " + c + " = " + b / c + ". Look for the number that only divides one of them.";
+        },
+      };
+    }
+    if (style === "missingFactor") {
+      const n = poolPick(POOL.factorN, level);
+      const F = factors(n);
+      if (F.length < 5) return null;
+      const missing = pick(F.filter((f) => f > 1 && f < n));
+      const shown = F.filter((f) => f !== missing);
+      const nonF = [];
+      for (let d = 2; d < n; d++) if (n % d !== 0) nonF.push(d);
+      const distract = shuffle(nonF).slice(0, 3);
+      if (distract.length < 3) return null;
+      return {
+        kind: "choice", topic: "factors", level: lv(level),
+        instruction: "Choose one answer",
+        stem: name + " lists the factors of " + n + " as " + listStr(shown) + ". Which factor has been left out?",
+        optionStyle: "num",
+        options: shuffle([missing].concat(distract)).map((v) => ({ label: String(v), value: v, correct: v === missing })),
+        right: "<b>" + missing + "</b> is missing: " + missing + " × " + n / missing + " = " + n + ". The full list is " + listStr(F) + ".",
+        wrong: function (ch) {
+          const c = ch[0];
+          return "<b>" + c + "</b> is not a factor of " + n + " at all — " + n + " ÷ " + c + " is not a whole number. Check which factor pair is missing from " + name + "'s list.";
+        },
+      };
+    }
+    const k = poolPick(POOL.mult, level);
+    const terms = multiplesOf(k, 5);
+    const badIdx = 1 + rnd(4);
+    const bad = terms[badIdx] + (1 + rnd(Math.max(1, k - 1)));
+    if (bad % k === 0) return null;
+    const shown = terms.slice();
+    shown[badIdx] = bad;
+    return {
+      kind: "choice", topic: "multiples", level: lv(level),
+      instruction: "Choose one answer",
+      stem: name + " writes the first five multiples of " + k + " as " + listStr(shown) + ". Which number is wrong?",
+      optionStyle: "num",
+      options: shuffle(shown).map((v) => ({ label: String(v), value: v, correct: v === bad })),
+      right: "<b>" + bad + "</b> is wrong: " + bad + " ÷ " + k + " is not a whole number. It should be " + k + " × " + (badIdx + 1) + " = " + terms[badIdx] + ".",
+      wrong: function (ch) {
+        const c = ch[0];
+        return "<b>" + c + "</b> is a genuine multiple of " + k + " (" + k + " × " + c / k + " = " + c + "). Look for the number that does not divide exactly by " + k + ".";
+      },
+    };
+  };
+
+  /* 5.15 Sorting: factor of n or multiple of n */
+  G.sortFM = function (level) {
+    const n = poolPick(POOL.factorN, level);
+    const F = factors(n).filter((f) => f > 1 && f < n);
+    if (F.length < 2) return null;
+    const fs = shuffle(F).slice(0, 2);
+    const ms = [n * (2 + rnd(2)), n * (4 + rnd(2))];
+    const items = shuffle(
+      fs.map((v) => ({ n: v, answer: "factor" })).concat(ms.map((v) => ({ n: v, answer: "multiple" })))
+    );
+    if (uniq(items.map((i) => i.n)).length !== items.length) return null;
+    return {
+      kind: "sort", topic: "reason", level: lv(level),
+      instruction: "Sort every number",
+      stem: "Is each number a factor of " + n + ", or a multiple of " + n + "?",
+      n: n,
+      items: items,
+      buckets: [{ id: "factor", label: "Factor of " + n }, { id: "multiple", label: "Multiple of " + n }],
+      right: "Factors divide into " + n + " (" + listStr(fs) + "). Multiples come from multiplying " + n + " (" + listStr(ms.sort((a, b) => a - b)) + "). Factors are never bigger than the number; multiples are never smaller.",
+      wrong: function (wrongOnes) {
+        const w = wrongOnes[0];
+        return "<b>" + w.n + "</b> is a " + w.answer + " of " + n + ": " + (w.answer === "factor"
+          ? n + " ÷ " + w.n + " = " + n / w.n + ", so it divides into " + n + "."
+          : n + " × " + w.n / n + " = " + w.n + ", so it comes from the " + n + " times table.");
+      },
+    };
+  };
+
+  /* 5.16 Which could it be? (constrained common factor) */
+  G.whichCouldFactor = function (level) {
+    const pr = poolPick(POOL.cfPair, level), a = pr[0], b = pr[1];
+    const cf = commonFactors(a, b);
+    if (cf.length < 3) return null;
+    const big = cf[cf.length - 1];
+    const limit = cf[cf.length - 2];
+    if (!isWhole(big) || !isWhole(limit) || big <= limit) return null;
+    const wrongs = [];
+    for (let d = 2; d <= Math.max(a, b); d++) {
+      if (d > limit && !(a % d === 0 && b % d === 0)) wrongs.push(d);
+    }
+    if (wrongs.length < 3) return null;
+    const opts = shuffle([big].concat(shuffle(wrongs).slice(0, 3)));
+    return {
+      kind: "choice", topic: "cfactors", level: 4,
+      instruction: "Choose one answer",
+      stem: "A number is a common factor of " + a + " and " + b + ", and it is greater than " + limit + ". Which number could it be?",
+      optionStyle: "num",
+      options: opts.map((v) => ({ label: String(v), value: v, correct: v === big })),
+      right: "<b>" + big + "</b> works: " + a + " ÷ " + big + " = " + a / big + " and " + b + " ÷ " + big + " = " + b / big + ". The common factors of " + a + " and " + b + " are " + listStr(cf) + ".",
+      wrong: function (ch) {
+        const c = ch[0];
+        return "<b>" + c + "</b> fails the test: " + (a % c !== 0 ? a + " ÷ " + c : b + " ÷ " + c) + " is not a whole number. The common factors of " + a + " and " + b + " are " + listStr(cf) + ".";
+      },
+    };
+  };
+
+  /* 5.17 Reasoning yes/no with two claims (boss finale style) */
+  G.doubleClaim = function (level) {
+    const p = pick([3, 4, 6, 8, 12]);
+    const t = 2 + rnd(5);
+    const q = p * t;
+    const z = pick([2, 3, 4, 5, 6]);
+    const name = pick(NAMES);
+    const claimA = isFactorOf(p, q);
+    const claimB = !isMultipleOf(p, z);
+    const truth = claimA && claimB;
+    const text = p + " is a factor of " + q + ", but it is not a multiple of " + z + ".";
+    const why =
+      p + " × " + t + " = " + q + ", so " + p + " is a factor of " + q + ". " +
+      (isMultipleOf(p, z)
+        ? "However " + p + " ÷ " + z + " = " + p / z + ", so " + p + " <b>is</b> a multiple of " + z + " — the second half of the statement is wrong."
+        : p + " ÷ " + z + " is not a whole number, so " + p + " is not a multiple of " + z + " — both halves are right.");
+    return {
+      kind: "yesno", topic: "reason", level: 4,
+      instruction: "Is this correct?",
+      stem: name + " says:",
+      quote: "“" + text + "”",
+      optionStyle: "two",
+      options: [
+        { label: "✅ Yes, correct", value: true, correct: truth === true },
+        { label: "❌ No, not correct", value: false, correct: truth === false },
+      ],
+      right: (truth ? name + " is right. " : name + " has made a mistake. ") + why,
+      wrong: function () { return (truth ? name + " is actually right. " : name + " is actually wrong. ") + why; },
+    };
+  };
+
+  /* ---------------- 6. QUESTION SETS ---------------- */
+  const WORLDS = {
+    1: {
+      id: 1, name: "Factor Forest", icon: "🌳", colour: "forest",
+      focus: "Factors, factor pairs & common factors",
+      badge: { id: "factor-finder", icon: "🌳", name: "Factor Finder" },
+      build: () => [
+        make(G.factorsSelect, 1),
+        make(G.factorPair, 1),
+        make(G.missingFactor, 2),
+        make(G.spotMistake, 2, { style: "factor" }),
+        make(G.factorsSelect, 2, { findAll: true }),
+        make(G.factorsSelect, 3, { findAll: true }),
+        make(G.commonFactorsSelect, 2),
+        make(G.commonFactorsSelect, 3),
+        make(G.errorAnalysis, 3, { style: "cfIntruder" }),
+        make(G.whichCouldFactor, 4),
+      ],
+      teach: {
+        title: "What is a factor?",
+        lead: "A factor is a whole number that divides exactly into another number, with nothing left over.",
+        boxes: [
+          { t: "🔢 Multiplication shows factors", m: "3 × 4 = 12", x: "So 3 and 4 are both factors of 12." },
+          { t: "➗ Division checks factors", m: "12 ÷ 3 = 4", x: "A whole number answer means 3 is a factor." },
+          { t: "🌿 Common factors", m: "Factors of 12 and 18", x: "Numbers in both lists — 1, 2, 3 and 6 — are common factors." },
+        ],
+        tags: ["1 is a factor of every number", "Every number is a factor of itself", "Factors are never bigger than the number"],
+      },
+    },
+    2: {
+      id: 2, name: "Multiple Mountain", icon: "🏔️", colour: "mountain",
+      focus: "Multiples, sequences & common multiples",
+      badge: { id: "multiple-master", icon: "🏔️", name: "Multiple Master" },
+      build: () => [
+        make(G.multiplePath, 1),
+        make(G.whichMultiple, 1),
+        make(G.sequence, 2),
+        make(G.sequence, 2, { first: true }),
+        make(G.spotMistake, 2, { style: "multiple" }),
+        make(G.commonMultipleChoice, 2),
+        make(G.commonMultiplesSelect, 3),
+        make(G.errorAnalysis, 3, { style: "badMultiple" }),
+        make(G.commonMultipleChoice, 4, { could: true }),
+        make(G.commonMultiplesSelect, 4),
+      ],
+      teach: {
+        title: "What is a multiple?",
+        lead: "A multiple is what you get when you multiply a number by a positive whole number. Multiples are the answers in a times table.",
+        boxes: [
+          { t: "🔢 Counting up", m: "4, 8, 12, 16, 20 …", x: "4 × 1, 4 × 2, 4 × 3 … these are all multiples of 4." },
+          { t: "🔁 The other way round", m: "4 × 3 = 12", x: "4 is a factor of 12, and 12 is a multiple of 4. Same fact, two names." },
+          { t: "⭐ Common multiples", m: "3s: 3, 6, 9, 12 …<br>4s: 4, 8, 12 …", x: "12 appears in both lists, so 12 is a common multiple of 3 and 4." },
+        ],
+        tags: ["Multiples are never smaller than the number", "A number is a multiple of itself", "Multiples go on forever"],
+      },
+    },
+    3: {
+      id: 3, name: "Common Number Citadel", icon: "👑", colour: "citadel",
+      focus: "Mixed reasoning & error analysis",
+      badge: { id: "number-explorer", icon: "👑", name: "Number Explorer" },
+      build: () => [
+        make(G.statement, 3, { wantCorrect: true }),
+        make(G.sortFM, 3),
+        make(G.commonFactorsSelect, 4),
+        make(G.statement, 4, { wantCorrect: false }),
+        make(G.commonMultiplesSelect, 4),
+        make(G.errorAnalysis, 4, { style: "missingFactor" }),
+        make(G.alwaysTrue, 4),
+        make(G.doubleClaim, 4),
+      ],
+      teach: {
+        title: "Factors and multiples together",
+        lead: "One multiplication fact tells you about factors and multiples at the same time. Mixing them up is the easiest mistake to make.",
+        boxes: [
+          { t: "🔑 One fact, four truths", m: "3 × 4 = 12", x: "3 is a factor of 12 · 4 is a factor of 12 · 12 is a multiple of 3 · 12 is a multiple of 4." },
+          { t: "🌿 Common factor", m: "2 is a factor of 8, 10 and 12", x: "A factor shared by two or more numbers." },
+          { t: "⭐ Common multiple", m: "12 is a multiple of 2, 3, 4 and 6", x: "A multiple shared by two or more numbers." },
+        ],
+        tags: ["Smaller number → factor", "Larger number → multiple", "Check by dividing"],
+      },
+    },
+  };
+
+  const BOSS = () => [
+    make(G.factorsSelect, 2, { n: 36, findAll: true }),
+    make(G.whichMultiple, 2),
+    make(G.commonFactorsSelect, 3),
+    make(G.commonMultipleChoice, 3),
+    make(G.doubleClaim, 4),
+  ];
+
+  const TOPICS = {
+    factors: {
+      name: "Factors", icon: "🌳", blurb: "Factor pairs, missing factors, finding every factor",
+      build: () => [
+        make(G.factorsSelect, 1), make(G.factorPair, 1), make(G.missingFactor, 2),
+        make(G.factorsSelect, 2, { findAll: true }), make(G.spotMistake, 2, { style: "factor" }),
+        make(G.errorAnalysis, 3, { style: "missingFactor" }), make(G.factorPair, 3),
+        make(G.factorsSelect, 4, { findAll: true }),
+      ],
+    },
+    multiples: {
+      name: "Multiples", icon: "🏔️", blurb: "Spotting multiples and continuing sequences",
+      build: () => [
+        make(G.multiplePath, 1), make(G.whichMultiple, 1), make(G.sequence, 2),
+        make(G.sequence, 2, { first: true }), make(G.spotMistake, 2, { style: "multiple" }),
+        make(G.errorAnalysis, 3, { style: "badMultiple" }), make(G.whichMultiple, 3), make(G.sequence, 4),
+      ],
+    },
+    cfactors: {
+      name: "Common Factors", icon: "🌿", blurb: "Factors shared by two numbers",
+      build: () => [
+        make(G.commonFactorsSelect, 1), make(G.spotMistake, 1, { style: "cfactor" }),
+        make(G.commonFactorsSelect, 2), make(G.errorAnalysis, 2, { style: "cfIntruder" }),
+        make(G.commonFactorsSelect, 3), make(G.spotMistake, 3, { style: "cfactor" }),
+        make(G.commonFactorsSelect, 4), make(G.whichCouldFactor, 4),
+      ],
+    },
+    cmultiples: {
+      name: "Common Multiples", icon: "⭐", blurb: "Multiples shared by two numbers",
+      build: () => [
+        make(G.commonMultipleChoice, 1), make(G.spotMistake, 1, { style: "cmultiple" }),
+        make(G.commonMultipleChoice, 2), make(G.commonMultiplesSelect, 2),
+        make(G.commonMultiplesSelect, 3), make(G.spotMistake, 3, { style: "cmultiple" }),
+        make(G.commonMultipleChoice, 4, { could: true }), make(G.commonMultiplesSelect, 4),
+      ],
+    },
+    mixed: {
+      name: "Mixed Practice", icon: "🎲", blurb: "A bit of everything from Lesson 2.3",
+      build: () => [
+        make(G.factorsSelect, 1), make(G.whichMultiple, 1), make(G.commonFactorsSelect, 2),
+        make(G.commonMultipleChoice, 2), make(G.statement, 3, { wantCorrect: true }),
+        make(G.sortFM, 3), make(G.errorAnalysis, 4), make(G.alwaysTrue, 4),
+      ],
+    },
+  };
+
+  function challengeSet() {
+    const pool = [
+      () => make(G.factorsSelect, 2), () => make(G.factorPair, 2), () => make(G.missingFactor, 3),
+      () => make(G.whichMultiple, 2), () => make(G.sequence, 3), () => make(G.commonFactorsSelect, 3),
+      () => make(G.commonMultipleChoice, 3), () => make(G.commonMultiplesSelect, 3),
+      () => make(G.statement, 3, { wantCorrect: true }), () => make(G.statement, 4, { wantCorrect: false }),
+      () => make(G.sortFM, 3), () => make(G.errorAnalysis, 4), () => make(G.alwaysTrue, 4),
+      () => make(G.doubleClaim, 4), () => make(G.spotMistake, 3),
+    ];
+    return shuffle(pool).slice(0, 10).map((f) => f());
+  }
+
+  /* ---------------- 7. BADGES ---------------- */
+  const BADGES = [
+    { id: "factor-finder", icon: "🌳", name: "Factor Finder", how: "Complete Factor Forest" },
+    { id: "multiple-master", icon: "🏔️", name: "Multiple Master", how: "Complete Multiple Mountain" },
+    { id: "cf-explorer", icon: "🌿", name: "Common Factor Explorer", how: "5 common-factor questions right" },
+    { id: "cm-champion", icon: "⭐", name: "Common Multiple Champion", how: "5 common-multiple questions right" },
+    { id: "number-explorer", icon: "👑", name: "Number Explorer", how: "Complete the Citadel" },
+    { id: "quest-master", icon: "💎", name: "Factor Quest Master", how: "Get 8 in a row" },
+    { id: "common-master", icon: "🏆", name: "Common Number Master", how: "Defeat the Number Monster" },
+  ];
+
+  /* ---------------- 8. SOUND ---------------- */
+  const Sound = {
+    on: true, ctx: null,
+    init() {
+      if (this.ctx || !this.on) return;
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) this.ctx = new AC();
+      } catch (e) { this.ctx = null; }
+    },
+    play(notes, type, vol) {
+      if (!this.on) return;
+      this.init();
+      const ctx = this.ctx;
+      if (!ctx) return;
+      try {
+        if (ctx.state === "suspended") ctx.resume();
+        let t = ctx.currentTime;
+        notes.forEach(function (n) {
+          const osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = type || "triangle";
+          osc.frequency.setValueAtTime(n[0], t);
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(vol || 0.13, t + 0.012);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + n[1]);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(t); osc.stop(t + n[1] + 0.02);
+          t += n[1] * 0.85;
+        });
+      } catch (e) { /* silence must never break the game */ }
+    },
+    click() { this.play([[420, 0.06]], "square", 0.05); },
+    right() { this.play([[523, 0.1], [659, 0.1], [784, 0.16]], "triangle", 0.12); },
+    wrong() { this.play([[320, 0.13], [240, 0.18]], "sine", 0.1); },
+    reward() { this.play([[523, 0.09], [659, 0.09], [784, 0.09], [1046, 0.22]], "triangle", 0.13); },
+    unlock() { this.play([[392, 0.1], [523, 0.1], [698, 0.2]], "triangle", 0.12); },
+    boss() { this.play([[160, 0.16], [130, 0.2], [110, 0.26]], "sawtooth", 0.08); },
+    hit() { this.play([[660, 0.07], [880, 0.12]], "square", 0.09); },
+    tick() { this.play([[880, 0.04]], "square", 0.04); },
+  };
+
+  /* ---------------- 9. GAME STATE ---------------- */
+  function freshState() {
+    return {
+      score: 0, stars: 0, coins: 0, streak: 0, bestStreak: 0,
+      badges: [], worldsDone: [], bossDone: false,
+      topicRight: { factors: 0, multiples: 0, cfactors: 0, cmultiples: 0, reason: 0 },
+      totalRight: 0, totalAsked: 0,
+    };
+  }
+  let S = freshState();
+
+  const run = {
+    mode: null, worldId: null, questions: [], index: 0,
+    right: 0, firstTry: 0, timed: false, timer: null, timeLeft: 0,
+    locked: false, attempts: 0, selection: [], sortPicks: {}, pathFound: [], pathErrors: 0,
+    bossHp: 100, startedBadges: [],
+  };
+
+  /* ---------------- 10. DOM ---------------- */
+  const $ = (id) => document.getElementById(id);
+  const screens = ["home", "map", "practice", "teach", "quiz", "results"];
+  function show(name) {
+    screens.forEach((s) => { const el = $("screen-" + s); if (el) el.hidden = s !== name; });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function setWorldColour(colour) {
+    const root = document.documentElement;
+    root.style.setProperty("--world", "var(--" + colour + ")");
+    root.style.setProperty("--world-dark", "var(--" + colour + "-dark)");
+  }
+
+  function mascotSVG(cls) {
+    return (
+      '<svg class="mascot ' + (cls || "") + '" viewBox="0 0 100 104" role="img" aria-label="Pip the Explorer">' +
+      '<ellipse cx="50" cy="96" rx="26" ry="5" fill="rgba(0,0,0,.10)"/>' +
+      '<circle cx="50" cy="60" r="30" fill="var(--world)"/>' +
+      '<circle cx="50" cy="60" r="30" fill="none" stroke="var(--world-dark)" stroke-width="3"/>' +
+      '<ellipse cx="50" cy="74" rx="17" ry="12" fill="#FFF6E7" opacity=".85"/>' +
+      '<circle cx="40" cy="57" r="7" fill="#fff"/><circle cx="60" cy="57" r="7" fill="#fff"/>' +
+      '<circle cx="41" cy="58" r="3.4" fill="#17242E"/><circle cx="61" cy="58" r="3.4" fill="#17242E"/>' +
+      '<circle cx="39.6" cy="56.4" r="1.2" fill="#fff"/><circle cx="59.6" cy="56.4" r="1.2" fill="#fff"/>' +
+      '<path d="M43 70 q7 7 14 0" fill="none" stroke="#17242E" stroke-width="3" stroke-linecap="round"/>' +
+      '<circle cx="30" cy="67" r="4" fill="var(--berry)" opacity=".45"/><circle cx="70" cy="67" r="4" fill="var(--berry)" opacity=".45"/>' +
+      '<ellipse cx="50" cy="34" rx="30" ry="7" fill="var(--hat)"/>' +
+      '<path d="M31 34 q3 -20 19 -20 q16 0 19 20 z" fill="var(--hat)"/>' +
+      '<path d="M31 34 q3 -20 19 -20 q16 0 19 20 z" fill="none" stroke="var(--hat-dark)" stroke-width="2.5"/>' +
+      '<rect x="30" y="28" width="40" height="6" rx="3" fill="var(--berry)"/>' +
+      '<circle cx="50" cy="31" r="3.4" fill="var(--gold)"/>' +
+      "</svg>"
+    );
+  }
+  function monsterSVG() {
+    return (
+      '<svg class="monster" id="monster-svg" viewBox="0 0 120 110" role="img" aria-label="The Number Monster">' +
+      '<ellipse cx="60" cy="104" rx="34" ry="5" fill="rgba(0,0,0,.12)"/>' +
+      '<path d="M18 70 q-6 -46 42 -46 q48 0 42 46 q4 24 -42 24 q-46 0 -42 -24z" fill="var(--citadel)" stroke="var(--citadel-dark)" stroke-width="3"/>' +
+      '<circle cx="40" cy="52" r="11" fill="#fff"/><circle cx="80" cy="52" r="11" fill="#fff"/><circle cx="60" cy="34" r="8" fill="#fff"/>' +
+      '<circle cx="41" cy="54" r="5" fill="#17242E"/><circle cx="81" cy="54" r="5" fill="#17242E"/><circle cx="60" cy="35" r="3.6" fill="#17242E"/>' +
+      '<path d="M40 76 h40 v4 q-20 10 -40 0z" fill="#3A1226"/>' +
+      '<path d="M44 76 l5 8 l5 -8z" fill="#fff"/><path d="M58 76 l5 9 l5 -9z" fill="#fff"/><path d="M72 76 l4 7 l4 -7z" fill="#fff"/>' +
+      '<path d="M22 30 l8 -14 l7 12z" fill="var(--citadel-dark)"/><path d="M98 30 l-8 -14 l-7 12z" fill="var(--citadel-dark)"/>' +
+      "</svg>"
+    );
+  }
+
+  function toast(msg) {
+    const layer = $("toast-layer");
+    const el = document.createElement("div");
+    el.className = "toast";
+    el.innerHTML = msg;
+    layer.appendChild(el);
+    setTimeout(() => { el.remove(); }, 2600);
+  }
+
+  function updateHud() {
+    $("hud-stars").textContent = S.stars;
+    $("hud-coins").textContent = S.coins;
+    $("hud-streak").textContent = S.streak;
+    $("hud-badges").textContent = S.badges.length;
+    $("hud-streak-wrap").setAttribute("data-hot", S.streak >= 3 ? "true" : "false");
+  }
+
+  function renderBadges() {
+    $("badge-rail").innerHTML = BADGES.map((b) =>
+      '<span class="badge" data-earned="' + (S.badges.indexOf(b.id) > -1) + '" title="' + esc(b.how) + '">' +
+      '<span class="b-ico" aria-hidden="true">' + b.icon + "</span>" + esc(b.name) + "</span>"
+    ).join("");
+    $("home-progress").textContent = S.worldsDone.length + " of 3 worlds complete" + (S.bossDone ? " · Monster defeated 🏆" : "");
+  }
+
+  function award(id) {
+    if (S.badges.indexOf(id) > -1) return null;
+    S.badges.push(id);
+    const b = BADGES.filter((x) => x.id === id)[0];
+    Sound.reward();
+    toast(b.icon + " Badge earned: " + esc(b.name));
+    updateHud();
+    return b;
+  }
+  function checkBadges() {
+    if (S.topicRight.cfactors >= 5) award("cf-explorer");
+    if (S.topicRight.cmultiples >= 5) award("cm-champion");
+    if (S.bestStreak >= 8) award("quest-master");
+  }
+
+  /* ---------------- 11. SCORING ---------------- */
+  function scoreRight(firstTry) {
+    const base = firstTry ? 10 : 5;
+    const bonus = firstTry ? Math.min(10, S.streak * 2) : 0;
+    S.score += base + bonus;
+    S.coins += firstTry ? 5 : 2;
+    if (firstTry) {
+      S.stars += 1;
+      S.streak += 1;
+      if (S.streak > S.bestStreak) S.bestStreak = S.streak;
+    }
+    S.totalRight += 1;
+    updateHud();
+    return base + bonus;
+  }
+  function breakStreak() { S.streak = 0; updateHud(); }
+
+  /* ---------------- 12. QUIZ ENGINE ---------------- */
+  function startRun(cfg) {
+    run.mode = cfg.mode;
+    run.worldId = cfg.worldId || null;
+    run.questions = (cfg.questions || []).filter(Boolean);
+    run.index = 0; run.right = 0; run.firstTry = 0;
+    run.timed = !!cfg.timed;
+    run.bossHp = 100;
+    run.startedBadges = S.badges.slice();
+    $("boss-stage-slot").innerHTML = cfg.mode === "boss" ? bossStageHTML() : "";
+    setWorldColour(cfg.colour || "forest");
+    $("quiz-chip").innerHTML = cfg.chip;
+    show("quiz");
+    renderQuestion();
+  }
+
+  function bossStageHTML() {
+    return (
+      '<div class="boss-stage">' +
+      '<h2 style="font-size:clamp(1.4rem,4vw,1.9rem)">👾 Defeat the Number Monster!</h2>' +
+      monsterSVG() +
+      '<div class="hp-wrap"><div class="hp-bar"><div class="hp-fill" id="hp-fill"></div></div>' +
+      '<div class="hp-label"><span>Monster energy</span><span id="hp-num">100 / 100</span></div></div>' +
+      "</div>"
+    );
+  }
+
+  function renderTrail() {
+    const t = $("trail");
+    let html = mascotSVG("trail-mascot");
+    for (let i = 0; i < run.questions.length; i++) {
+      const state = i < run.index ? (run.doneStates && run.doneStates[i] ? run.doneStates[i] : "done") : i === run.index ? "now" : "";
+      html += '<span class="trail-pip" data-state="' + state + '"></span>';
+    }
+    t.innerHTML = html;
+  }
+
+  function stopTimer() {
+    if (run.timer) { clearInterval(run.timer); run.timer = null; }
+  }
+  function startTimer() {
+    stopTimer();
+    if (!run.timed) { $("quiz-timer").hidden = true; return; }
+    const total = 40;
+    run.timeLeft = total;
+    $("quiz-timer").hidden = false;
+    const fill = $("timer-fill"), num = $("timer-num");
+    fill.style.width = "100%"; fill.setAttribute("data-low", "false");
+    num.textContent = total + "s";
+    run.timer = setInterval(function () {
+      run.timeLeft = Math.max(0, run.timeLeft - 1);
+      const pct = Math.max(0, (run.timeLeft / total) * 100);
+      fill.style.width = pct + "%";
+      fill.setAttribute("data-low", run.timeLeft <= 10 ? "true" : "false");
+      num.textContent = run.timeLeft + "s";
+      if (run.timeLeft <= 5 && run.timeLeft > 0) Sound.tick();
+      if (run.timeLeft === 0) { stopTimer(); timeUp(); }
+    }, 1000);
+  }
+
+  function renderQuestion() {
+    const q = run.questions[run.index];
+    if (!q) { finishRun(); return; }
+    run.locked = false; run.attempts = 0; run.selection = []; run.sortPicks = {};
+    run.pathFound = []; run.pathErrors = 0;
+
+    $("quiz-count").textContent = "Question " + (run.index + 1) + " of " + run.questions.length;
+    $("quiz-level").textContent = ["Foundation", "Developing", "Reasoning", "Challenge"][q.level - 1] || "Foundation";
+    $("q-instruction").textContent = q.instruction;
+    renderTrail();
+
+    let body = '<p class="q-stem">' + esc(q.stem) + "</p>";
+    if (q.quote) body += '<div class="q-maths" style="font-size:clamp(1.2rem,3.6vw,1.7rem);line-height:1.35">' + esc(q.quote) + "</div>";
+    if (q.maths) body += '<div class="q-maths">' + q.maths + "</div>";
+    if (q.note) body += '<p class="q-note">' + esc(q.note) + "</p>";
+    $("q-body").innerHTML = body;
+
+    $("q-feedback").innerHTML = "";
+    renderOptions(q);
+    renderActions(q);
+    startTimer();
+  }
+
+  function renderOptions(q) {
+    const box = $("q-options");
+    if (q.kind === "path") {
+      box.innerHTML =
+        '<div class="stones" id="stones">' +
+        q.stones.map((s, i) => '<button class="stone" type="button" data-i="' + i + '">' + s.n + "</button>").join("") +
+        "</div>" +
+        '<div class="climber" id="climber">' + mascotSVG("") + "</div>";
+      Array.prototype.forEach.call(box.querySelectorAll(".stone"), function (btn) {
+        btn.addEventListener("click", function () { onStone(parseInt(btn.dataset.i, 10), btn); });
+      });
+      return;
+    }
+    if (q.kind === "sort") {
+      box.innerHTML =
+        '<div class="sort-rows">' +
+        q.items.map((it, i) =>
+          '<div class="sort-row" data-i="' + i + '"><span class="sort-num">' + it.n + "</span>" +
+          '<div class="sort-choices">' +
+          q.buckets.map((b) => '<button class="sort-pick" type="button" role="button" aria-pressed="false" data-i="' + i + '" data-b="' + b.id + '">' + esc(b.label) + "</button>").join("") +
+          "</div></div>"
+        ).join("") +
+        "</div>";
+      Array.prototype.forEach.call(box.querySelectorAll(".sort-pick"), function (btn) {
+        btn.addEventListener("click", function () {
+          if (run.locked) return;
+          const i = btn.dataset.i;
+          run.sortPicks[i] = btn.dataset.b;
+          Array.prototype.forEach.call(box.querySelectorAll('.sort-pick[data-i="' + i + '"]'), function (b2) {
+            b2.setAttribute("aria-pressed", String(b2 === btn));
+          });
+          Sound.click();
+          refreshSubmit();
+        });
+      });
+      return;
+    }
+    const multi = q.kind === "select";
+    box.innerHTML =
+      '<div class="opts" data-cols="' + (q.optionStyle || "num") + '" role="group">' +
+      q.options.map((o, i) =>
+        '<button class="opt' + (q.optionStyle === "text" || q.optionStyle === "wide" ? " opt-text" : "") + '" type="button" ' +
+        'aria-pressed="false" data-i="' + i + '">' + esc(o.label) + '<span class="mark" aria-hidden="true"></span></button>'
+      ).join("") +
+      "</div>";
+    Array.prototype.forEach.call(box.querySelectorAll(".opt"), function (btn) {
+      btn.addEventListener("click", function () {
+        if (run.locked) return;
+        const i = parseInt(btn.dataset.i, 10);
+        if (multi) {
+          const at = run.selection.indexOf(i);
+          if (at > -1) run.selection.splice(at, 1); else run.selection.push(i);
+          btn.setAttribute("aria-pressed", String(run.selection.indexOf(i) > -1));
+        } else {
+          run.selection = [i];
+          Array.prototype.forEach.call(box.querySelectorAll(".opt"), function (b2) {
+            b2.setAttribute("aria-pressed", String(b2 === btn));
+          });
+        }
+        Sound.click();
+        refreshSubmit();
+      });
+    });
+  }
+
+  function refreshSubmit() {
+    const btn = $("btn-submit");
+    if (!btn) return;
+    const q = run.questions[run.index];
+    let ready = false;
+    if (q.kind === "sort") ready = Object.keys(run.sortPicks).length === q.items.length;
+    else ready = run.selection.length > 0;
+    btn.disabled = !ready;
+  }
+
+  function renderActions(q) {
+    const box = $("q-actions");
+    if (q.kind === "path") {
+      box.innerHTML = '<span class="q-note" id="path-note">Find all ' + q.stones.filter((s) => s.good).length + " multiples of " + q.k + ".</span>";
+      return;
+    }
+    box.innerHTML = '<button class="btn btn-primary" id="btn-submit" type="button" disabled>Submit answer</button>';
+    $("btn-submit").addEventListener("click", submit);
+    refreshSubmit();
+  }
+
+  function onStone(i, btn) {
+    if (run.locked) return;
+    const q = run.questions[run.index];
+    const stone = q.stones[i];
+    if (btn.dataset.result) return;
+    if (stone.good) {
+      btn.dataset.result = "right"; btn.dataset.glyph = "✓";
+      btn.classList.add("pop");
+      run.pathFound.push(stone.n);
+      Sound.right();
+      const climber = $("climber");
+      if (climber) {
+        const svg = climber.querySelector("svg");
+        if (svg) svg.style.transform = "translateX(" + (run.pathFound.length - 3) * 26 + "px)";
+      }
+      const total = q.stones.filter((s) => s.good).length;
+      const note = $("path-note");
+      if (note) note.textContent = run.pathFound.length + " of " + total + " stones found.";
+      if (run.pathFound.length === total) {
+        run.locked = true;
+        lockStones();
+        const clean = run.pathErrors === 0;
+        if (clean) {
+          const pts = scoreRight(true);
+          run.right++; run.firstTry++;
+          S.topicRight.multiples += 1;
+          feedback("right", "🎉 Correct!", q.right, pts);
+        } else {
+          breakStreak();
+          S.totalRight += 0;
+          feedback("wrong", "🏁 Path complete", q.right + " You stepped on " + run.pathErrors + " stone" + (run.pathErrors > 1 ? "s" : "") + " that were not multiples of " + q.k + ".", 0);
+        }
+        S.totalAsked += 1;
+        checkBadges();
+        markTrail(clean ? "done" : "miss");
+        nextButton();
+      }
+    } else {
+      btn.dataset.result = "wrong"; btn.dataset.glyph = "✕";
+      btn.classList.add("shake");
+      setTimeout(() => btn.classList.remove("shake"), 400);
+      run.pathErrors += 1;
+      breakStreak();
+      Sound.wrong();
+      feedback("wrong", "💡 Not quite!", q.wrong(stone.n), 0);
+    }
+  }
+  function lockStones() {
+    Array.prototype.forEach.call(document.querySelectorAll(".stone"), function (b) { b.disabled = true; });
+  }
+
+  function submit() {
+    if (run.locked) return;
+    const q = run.questions[run.index];
+    stopTimer();
+    if (q.kind === "sort") return submitSort(q);
+
+    const chosenIdx = run.selection.slice();
+    const correctIdx = q.options.map((o, i) => (o.correct ? i : -1)).filter((i) => i > -1);
+    const ok = chosenIdx.length === correctIdx.length && correctIdx.every((i) => chosenIdx.indexOf(i) > -1);
+    run.attempts += 1;
+
+    if (ok) {
+      run.locked = true;
+      paintOptions(q, chosenIdx, true);
+      const firstTry = run.attempts === 1;
+      const pts = scoreRight(firstTry);
+      run.right++; if (firstTry) run.firstTry++;
+      if (S.topicRight[q.topic] !== undefined) S.topicRight[q.topic] += 1;
+      S.totalAsked += 1;
+      Sound.right();
+      if (run.mode === "boss") damageMonster();
+      feedback("right", "🎉 Correct!", q.right, pts);
+      checkBadges();
+      markTrail("done");
+      nextButton();
+      return;
+    }
+
+    breakStreak();
+    Sound.wrong();
+    const chosenValues = chosenIdx.map((i) => q.options[i].value);
+    const why = q.wrong ? q.wrong(chosenValues) : "Have another look at the numbers.";
+    if (run.attempts === 1) {
+      paintOptions(q, chosenIdx, false, true);
+      feedback("wrong", "💡 Not quite!", why + "<br><span class='fb-reward'>Have another go — the answer is still hidden.</span>", 0);
+      $("q-actions").innerHTML =
+        '<button class="btn btn-primary" id="btn-retry" type="button">🔁 Try again</button>' +
+        '<button class="btn btn-quiet" id="btn-reveal" type="button">Show me the answer</button>';
+      $("btn-retry").addEventListener("click", function () {
+        clearPaint();
+        run.selection = []; run.sortPicks = {};
+        $("q-feedback").innerHTML = "";
+        renderOptions(q);
+        renderActions(q);
+        startTimer();
+      });
+      $("btn-reveal").addEventListener("click", function () { revealAnswer(q, chosenIdx); });
+      return;
+    }
+    revealAnswer(q, chosenIdx, why);
+  }
+
+  function revealAnswer(q, chosenIdx, why) {
+    run.locked = true;
+    stopTimer();
+    paintOptions(q, chosenIdx || [], false);
+    S.totalAsked += 1;
+    feedback("wrong", "💡 Not quite!", (why ? why + "<br>" : "") + q.right, 0);
+    markTrail("miss");
+    if (run.mode === "boss") monsterRoar();
+    nextButton();
+  }
+
+  function submitSort(q) {
+    run.attempts += 1;
+    const rows = document.querySelectorAll(".sort-row");
+    const wrongOnes = [];
+    q.items.forEach(function (it, i) {
+      if (run.sortPicks[i] !== it.answer) wrongOnes.push(it);
+    });
+    const ok = wrongOnes.length === 0;
+    Array.prototype.forEach.call(rows, function (row) {
+      const i = row.dataset.i;
+      const good = run.sortPicks[i] === q.items[i].answer;
+      row.setAttribute("data-result", good ? "right" : "wrong");
+      if (run.locked || ok || run.attempts > 1) {
+        const v = document.createElement("span");
+        v.className = "sort-verdict";
+        v.textContent = good ? "✓" : "✕";
+        if (!row.querySelector(".sort-verdict")) row.insertBefore(v, row.firstChild);
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".sort-pick"), function (b) { if (ok || run.attempts > 1) b.disabled = true; });
+
+    if (ok) {
+      run.locked = true;
+      const firstTry = run.attempts === 1;
+      const pts = scoreRight(firstTry);
+      run.right++; if (firstTry) run.firstTry++;
+      S.topicRight.reason += 1; S.totalAsked += 1;
+      Sound.right();
+      if (run.mode === "boss") damageMonster();
+      feedback("right", "🎉 Correct!", q.right, pts);
+      markTrail("done"); checkBadges(); nextButton();
+      return;
+    }
+    breakStreak(); Sound.wrong();
+    if (run.attempts === 1) {
+      feedback("wrong", "💡 Not quite!", q.wrong(wrongOnes) + "<br><span class='fb-reward'>Change the ones marked ✕ and submit again.</span>", 0);
+      Array.prototype.forEach.call(document.querySelectorAll(".sort-row"), function (row) {
+        if (row.getAttribute("data-result") === "right") row.removeAttribute("data-result");
+      });
+      return;
+    }
+    run.locked = true;
+    S.totalAsked += 1;
+    feedback("wrong", "💡 Not quite!", q.wrong(wrongOnes) + "<br>" + q.right, 0);
+    markTrail("miss");
+    if (run.mode === "boss") monsterRoar();
+    nextButton();
+  }
+
+  function paintOptions(q, chosenIdx, allRight, hintOnly) {
+    const btns = document.querySelectorAll("#q-options .opt");
+    Array.prototype.forEach.call(btns, function (btn) {
+      const i = parseInt(btn.dataset.i, 10);
+      const o = q.options[i];
+      const chosen = chosenIdx.indexOf(i) > -1;
+      if (hintOnly) {
+        // First wrong attempt: mark only the student's own mistakes, never the hidden answer.
+        if (chosen && !o.correct) { btn.dataset.result = "wrong"; btn.querySelector(".mark").textContent = "✕"; }
+        btn.disabled = true;
+        return;
+      }
+      if (o.correct) {
+        btn.dataset.result = chosen ? "right" : "missed";
+        btn.querySelector(".mark").textContent = chosen ? "✓" : "!";
+      } else if (chosen) {
+        btn.dataset.result = "wrong";
+        btn.querySelector(".mark").textContent = "✕";
+      }
+      btn.disabled = true;
+    });
+    if (allRight) {
+      Array.prototype.forEach.call(document.querySelectorAll('#q-options .opt[data-result="right"]'), function (b) { b.classList.add("pop"); });
+    }
+  }
+  function clearPaint() {
+    Array.prototype.forEach.call(document.querySelectorAll("#q-options .opt"), function (btn) {
+      btn.removeAttribute("data-result"); btn.disabled = false; btn.setAttribute("aria-pressed", "false");
+    });
+  }
+
+  function feedback(tone, head, body, pts) {
+    $("q-feedback").innerHTML =
+      '<div class="feedback" data-tone="' + tone + '">' +
+      '<div class="fb-head">' + esc(head) + "</div>" +
+      '<div class="fb-body">' + body + "</div>" +
+      (pts ? '<div class="fb-reward">+' + pts + " points · +1 ⭐" + (S.streak > 1 ? " · 🔥 " + S.streak + " in a row" : "") + "</div>" : "") +
+      "</div>";
+  }
+
+  function markTrail(state) {
+    if (!run.doneStates) run.doneStates = [];
+    run.doneStates[run.index] = state;
+    renderTrail();
+  }
+
+  function nextButton() {
+    const last = run.index === run.questions.length - 1;
+    $("q-actions").innerHTML =
+      '<button class="btn btn-primary" id="btn-next" type="button">' + (last ? "See results ➜" : "Next question ➜") + "</button>";
+    $("btn-next").addEventListener("click", function () {
+      Sound.click();
+      run.index += 1;
+      if (run.index >= run.questions.length) finishRun();
+      else renderQuestion();
+    });
+    $("btn-next").focus();
+  }
+
+  function timeUp() {
+    if (run.locked) return;
+    run.locked = true;
+    const q = run.questions[run.index];
+    Array.prototype.forEach.call(document.querySelectorAll("#q-options .opt, .sort-pick, .stone"), function (b) { b.disabled = true; });
+    breakStreak();
+    Sound.wrong();
+    S.totalAsked += 1;
+    feedback("time", "⏰ Time's up!", "No points this time — but nothing is lost. Take a look at the answer when you are ready.", 0);
+    $("q-actions").innerHTML =
+      '<button class="btn btn-quiet" id="btn-show" type="button">Show the answer</button>' +
+      '<button class="btn btn-primary" id="btn-next-t" type="button">' + (run.index === run.questions.length - 1 ? "See results ➜" : "Next question ➜") + "</button>";
+    $("btn-show").addEventListener("click", function () {
+      if (q.kind !== "sort" && q.kind !== "path") paintOptions(q, [], false);
+      feedback("time", "⏰ Time's up!", q.right, 0);
+      $("btn-show").disabled = true;
+    });
+    $("btn-next-t").addEventListener("click", function () {
+      run.index += 1;
+      if (run.index >= run.questions.length) finishRun();
+      else renderQuestion();
+    });
+    markTrail("miss");
+  }
+
+  function damageMonster() {
+    run.bossHp = Math.max(0, run.bossHp - 20);
+    const fill = $("hp-fill"), num = $("hp-num"), svg = $("monster-svg");
+    if (fill) fill.style.width = run.bossHp + "%";
+    if (num) num.textContent = run.bossHp + " / 100";
+    if (svg) { svg.classList.add("hit"); setTimeout(() => svg.classList.remove("hit"), 500); }
+    Sound.hit();
+    toast("💥 Monster takes damage!");
+  }
+  function monsterRoar() {
+    const svg = $("monster-svg");
+    if (svg) { svg.classList.add("hit"); setTimeout(() => svg.classList.remove("hit"), 500); }
+    Sound.boss();
+    toast("👾 The monster is still standing…");
+  }
+
+  /* ---------------- 13. RESULTS ---------------- */
+  function finishRun() {
+    stopTimer();
+    run.doneStates = [];
+    const total = run.questions.length;
+    const newBadges = [];
+    let title = "Round complete!";
+    let sub = "";
+
+    if (run.mode === "world") {
+      const w = WORLDS[run.worldId];
+      if (run.right >= Math.ceil(total * 0.6)) {
+        if (S.worldsDone.indexOf(w.id) < 0) S.worldsDone.push(w.id);
+        const b = award(w.badge.id);
+        if (b) newBadges.push(b);
+        Sound.unlock();
+        title = w.icon + " " + w.name + " complete!";
+        sub = w.id < 3 ? "The next world is now unlocked on the map." : "The Number Monster is waiting in the Citadel.";
+      } else {
+        title = w.icon + " Good effort!";
+        sub = "Get at least " + Math.ceil(total * 0.6) + " right to complete " + w.name + ". Try the world again — the questions change every time.";
+      }
+    } else if (run.mode === "boss") {
+      if (run.bossHp <= 0) {
+        S.bossDone = true;
+        const b1 = award("common-master");
+        if (b1) newBadges.push(b1);
+        title = "🎉 NUMBER EXPLORER MASTER! 🎉";
+        sub = "You defeated the Number Monster and mastered common factors and common multiples.";
+        Sound.reward();
+      } else {
+        title = "👾 The monster survives!";
+        sub = "It still has " + run.bossHp + " energy left. Answer all five challenges correctly to defeat it.";
+      }
+    } else if (run.mode === "practice") {
+      title = "🧠 Practice complete!";
+      sub = "You answered " + run.right + " of " + total + " correctly.";
+    } else if (run.mode === "challenge") {
+      title = "🏆 Challenge complete!";
+      sub = "You answered " + run.right + " of " + total + " correctly, " + run.firstTry + " of them first time.";
+    }
+
+    checkBadges();
+    renderBadges();
+    updateHud();
+
+    const pct = total ? Math.round((run.right / total) * 100) : 0;
+    $("results-card").innerHTML =
+      '<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">' +
+      '<div style="width:92px">' + mascotSVG("bob") + "</div>" +
+      '<div><h2 style="font-size:clamp(1.5rem,4.6vw,2.2rem)">' + esc(title) + "</h2>" +
+      '<p class="q-note" style="margin-top:6px">' + esc(sub) + "</p></div></div>" +
+      '<div class="result-grid">' +
+      tile(run.right + "/" + total, "Correct") +
+      tile(pct + "%", "Accuracy") +
+      tile(run.firstTry, "First time") +
+      tile(S.score, "Total score") +
+      tile(S.stars, "Stars") +
+      "</div>" +
+      newBadges.map((b) => '<div class="new-badge"><span class="nb-ico">' + b.icon + "</span>New badge: " + esc(b.name) + "</div>").join("") +
+      '<div class="actions" id="results-actions"></div>';
+
+    const acts = $("results-actions");
+    const btns = [];
+    if (run.mode === "world") {
+      const w = WORLDS[run.worldId];
+      const done = S.worldsDone.indexOf(w.id) > -1;
+      if (!done) btns.push(["btn-again", "🔁 Try " + w.name + " again", "btn-primary"]);
+      else if (w.id < 3) btns.push(["btn-next-world", "➜ Travel to " + WORLDS[w.id + 1].name, "btn-primary"]);
+      else btns.push(["btn-boss", "👾 Face the Number Monster", "btn-berry"]);
+      btns.push(["btn-map", "🗺️ Adventure map", "btn-quiet"]);
+    } else if (run.mode === "boss") {
+      if (run.bossHp > 0) btns.push(["btn-boss", "🔁 Challenge the monster again", "btn-berry"]);
+      btns.push(["btn-map", "🗺️ Adventure map", "btn-quiet"]);
+    } else if (run.mode === "practice") {
+      btns.push(["btn-again", "🔁 Practise again", "btn-primary"]);
+      btns.push(["btn-topics", "🧠 Choose another topic", "btn-quiet"]);
+    } else {
+      btns.push(["btn-again", "🔁 New challenge", "btn-gold"]);
+    }
+    btns.push(["btn-results-home", "🏠 Home", "btn-quiet"]);
+    acts.innerHTML = btns.map((b) => '<button class="btn ' + b[2] + '" id="' + b[0] + '" type="button">' + b[1] + "</button>").join("");
+
+    const on = (id, fn) => { const el = $(id); if (el) el.addEventListener("click", fn); };
+    on("btn-again", () => {
+      if (run.mode === "world") startWorld(run.worldId, true);
+      else if (run.mode === "practice") startPractice(run.topicId);
+      else startChallenge();
+    });
+    on("btn-next-world", () => goMap());
+    on("btn-boss", () => startBoss());
+    on("btn-map", () => goMap());
+    on("btn-topics", () => { show("practice"); });
+    on("btn-results-home", () => goHome());
+    show("results");
+  }
+  const tile = (n, l) => '<div class="result-tile"><div class="rt-num">' + esc(n) + '</div><div class="rt-lab">' + esc(l) + "</div></div>";
+
+  /* ---------------- 14. NAVIGATION ---------------- */
+  function goHome() {
+    stopTimer();
+    setWorldColour("forest");
+    renderBadges(); updateHud();
+    show("home");
+  }
+  function goMap() {
+    stopTimer();
+    setWorldColour("forest");
+    const nodes = $("map-nodes");
+    nodes.innerHTML = [1, 2, 3].map(function (id) {
+      const w = WORLDS[id];
+      const done = S.worldsDone.indexOf(id) > -1;
+      const unlocked = id === 1 || S.worldsDone.indexOf(id - 1) > -1;
+      return (
+        '<button class="world-node" type="button" data-w="' + id + '" data-id="' + id + '"' + (unlocked ? "" : " disabled") + ">" +
+        '<span class="wn-ico" aria-hidden="true">' + (unlocked ? w.icon : "🔒") + "</span>" +
+        '<span class="wn-name">' + esc(w.name) + "</span>" +
+        '<span class="wn-focus">' + esc(w.focus) + "</span>" +
+        '<span class="wn-state">' + (done ? "✔ Complete" : unlocked ? "Ready" : "Locked") + "</span>" +
+        "</button>"
+      );
+    }).join("");
+    Array.prototype.forEach.call(nodes.querySelectorAll(".world-node"), function (b) {
+      b.addEventListener("click", function () { if (!b.disabled) startWorld(parseInt(b.dataset.id, 10)); });
+    });
+    const allDone = S.worldsDone.length === 3;
+    $("map-progress").textContent = S.worldsDone.length + " of 3 worlds complete";
+    $("map-hint").innerHTML = allDone
+      ? "Every world is complete. Enter the Citadel and choose <b>Face the Number Monster</b> for the final battle." +
+        (S.bossDone ? " You have already defeated it once — beat it again any time." : "")
+      : S.worldsDone.length === 0
+        ? "Start in <b>Factor Forest</b>. Finishing a world unlocks the next one."
+        : "Next stop: <b>" + esc(WORLDS[S.worldsDone.length + 1].name) + "</b>.";
+    show("map");
+  }
+
+  function startWorld(id, skipTeach) {
+    const w = WORLDS[id];
+    setWorldColour(w.colour);
+    if (skipTeach) return launchWorld(id);
+    $("teach-chip").innerHTML = w.icon + " " + esc(w.name);
+    const t = w.teach;
+    $("teach-card").innerHTML =
+      '<p class="label">Before you explore</p>' +
+      '<h2 style="font-size:clamp(1.5rem,4.4vw,2rem);margin-top:6px">' + esc(t.title) + "</h2>" +
+      '<p class="q-note" style="font-size:1.05rem;margin-top:8px">' + esc(t.lead) + "</p>" +
+      '<div class="teach-grid">' +
+      t.boxes.map((b) =>
+        '<div class="teach-box"><span class="tb-title">' + b.t + '</span><span class="tb-maths">' + b.m + '</span><span class="tb-text">' + esc(b.x) + "</span></div>"
+      ).join("") +
+      "</div>" +
+      '<div class="arrow-row">' + t.tags.map((x) => '<span class="tag">' + esc(x) + "</span>").join("") + "</div>" +
+      '<div class="actions"><button class="btn btn-primary btn-xl" id="btn-enter-world" type="button">' + w.icon + " Enter " + esc(w.name) + "</button>" +
+      '<button class="btn btn-quiet" id="btn-back-map" type="button">🗺️ Back to map</button></div>';
+    $("btn-enter-world").addEventListener("click", function () { Sound.unlock(); launchWorld(id); });
+    $("btn-back-map").addEventListener("click", goMap);
+    show("teach");
+  }
+  function launchWorld(id) {
+    const w = WORLDS[id];
+    run.doneStates = [];
+    startRun({
+      mode: "world", worldId: id, colour: w.colour,
+      chip: w.icon + " " + esc(w.name),
+      questions: w.build(), timed: false,
+    });
+  }
+  function startBoss() {
+    run.doneStates = [];
+    setWorldColour("citadel");
+    Sound.boss();
+    startRun({ mode: "boss", worldId: 3, colour: "citadel", chip: "👾 Final Boss", questions: BOSS(), timed: false });
+  }
+  function startPractice(topicId) {
+    const t = TOPICS[topicId];
+    run.topicId = topicId;
+    run.doneStates = [];
+    setWorldColour("mountain");
+    startRun({ mode: "practice", colour: "mountain", chip: t.icon + " " + esc(t.name), questions: t.build(), timed: false });
+  }
+  function startChallenge() {
+    run.doneStates = [];
+    setWorldColour("gold");
+    startRun({ mode: "challenge", colour: "gold", chip: "🏆 Challenge Mode", questions: challengeSet(), timed: true });
+  }
+
+  /* ---------------- 15. WIRING ---------------- */
+  function renderTopics() {
+    $("topic-grid").innerHTML = Object.keys(TOPICS).map(function (k) {
+      const t = TOPICS[k];
+      return '<button class="topic-btn" type="button" data-t="' + k + '"><strong>' + t.icon + " " + esc(t.name) + "</strong><span>" + esc(t.blurb) + "</span></button>";
+    }).join("");
+    Array.prototype.forEach.call($("topic-grid").querySelectorAll(".topic-btn"), function (b) {
+      b.addEventListener("click", function () { Sound.click(); startPractice(b.dataset.t); });
+    });
+  }
+
+  function resetAll() {
+    stopTimer();
+    S = freshState();
+    run.doneStates = [];
+    updateHud(); renderBadges();
+    toast("🔄 Adventure reset — everything back to zero");
+    goHome();
+  }
+
+  function boot(saved) {
+    if (saved && saved.state) { try { S = Object.assign(freshState(), saved.state); } catch (e) { S = freshState(); } }
+    $("home-mascot").innerHTML = mascotSVG("");
+    renderTopics();
+    renderBadges();
+    updateHud();
+    $("btn-adventure").addEventListener("click", function () { Sound.click(); goMap(); });
+    $("btn-practice").addEventListener("click", function () { Sound.click(); show("practice"); });
+    $("btn-challenge").addEventListener("click", function () { Sound.click(); startChallenge(); });
+    $("btn-reset").addEventListener("click", resetAll);
+    ["btn-home-hud", "btn-map-home", "btn-practice-home", "btn-teach-home", "btn-quiz-home"].forEach(function (id) {
+      const el = $(id);
+      if (el) el.addEventListener("click", function () { Sound.click(); goHome(); });
+    });
+    $("btn-sound").addEventListener("click", function () {
+      Sound.on = !Sound.on;
+      $("btn-sound").textContent = Sound.on ? "🔊" : "🔈";
+      $("btn-sound").setAttribute("aria-pressed", String(Sound.on));
+      if (Sound.on) Sound.click();
+      toast(Sound.on ? "🔊 Sound on" : "🔈 Sound off");
+    });
+    show("home");
+  }
+
+  /* ---------------- START-UP ----------------
+     The game must always start, whatever the host page provides.
+     Saved-state restore is treated as a bonus, never as a gate. */
+  let booted = false;
+  function safeBoot(saved) {
+    if (booted) return;
+    booted = true;
+    try { boot(saved || null); }
+    catch (e) {
+      // Last resort: a fresh game is better than a dead page.
+      try { S = freshState(); boot(null); } catch (e2) { /* nothing more we can do */ }
+    }
+  }
+  function whenDomReady(fn) {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn, { once: true });
+    else fn();
+  }
+  whenDomReady(function () {
+    let hot = null;
+    try { hot = window.claude && window.claude.hot ? window.claude.hot : null; } catch (e) { hot = null; }
+    if (hot) {
+      try { if (typeof hot.snapshot === "function") hot.snapshot(function () { return { state: S }; }); } catch (e) { /* ignore */ }
+      try { if (typeof hot.ready === "function") hot.ready(function (d) { safeBoot(d); }); } catch (e) { /* ignore */ }
+      // If the host never calls back, start anyway a moment later.
+      setTimeout(function () { safeBoot(hot.data || null); }, 250);
+    } else {
+      safeBoot(null);
+    }
+  });
+
+  /* ---------------- 16. SELF TEST (classroom safety net) ---------------- */
+  window.__factorQuestTest = function (reps) {
+    const N = reps || 200;
+    const gens = [
+      ["factorsSelect", (l) => make(G.factorsSelect, l)],
+      ["findAllFactors", (l) => make(G.factorsSelect, l, { findAll: true })],
+      ["factorPair", (l) => make(G.factorPair, l)],
+      ["missingFactor", (l) => make(G.missingFactor, l)],
+      ["spotMistake", (l) => make(G.spotMistake, l)],
+      ["commonFactorsSelect", (l) => make(G.commonFactorsSelect, l)],
+      ["multiplePath", (l) => make(G.multiplePath, l)],
+      ["sequence", (l) => make(G.sequence, l)],
+      ["sequenceFirst", (l) => make(G.sequence, l, { first: true })],
+      ["whichMultiple", (l) => make(G.whichMultiple, l)],
+      ["commonMultipleChoice", (l) => make(G.commonMultipleChoice, l)],
+      ["commonMultiplesSelect", (l) => make(G.commonMultiplesSelect, l)],
+      ["statementCorrect", (l) => make(G.statement, l, { wantCorrect: true })],
+      ["statementIncorrect", (l) => make(G.statement, l, { wantCorrect: false })],
+      ["alwaysTrue", (l) => make(G.alwaysTrue, l)],
+      ["errorAnalysis", (l) => make(G.errorAnalysis, l)],
+      ["sortFM", (l) => make(G.sortFM, l)],
+      ["whichCouldFactor", (l) => make(G.whichCouldFactor, l)],
+      ["doubleClaim", (l) => make(G.doubleClaim, l)],
+    ];
+    const problems = [];
+    let count = 0;
+    gens.forEach(function (g) {
+      for (let i = 0; i < N; i++) {
+        const level = 1 + (i % 4);
+        const q = g[1](level);
+        count++;
+        if (!q) { problems.push(g[0] + ": returned nothing"); continue; }
+        if (!validate(q)) { problems.push(g[0] + ": failed validation"); continue; }
+        // deep semantic checks
+        const blob = JSON.stringify({ s: q.stem, m: q.maths, n: q.note, r: q.right, o: (q.options || []).map((o) => o.label) });
+        if (BAD.test(blob)) problems.push(g[0] + ": bad token in text → " + blob.slice(0, 120));
+        if (typeof q.right !== "string" || q.right.length < 8) problems.push(g[0] + ": weak explanation");
+        if (q.kind === "choice" || q.kind === "yesno") {
+          if (q.options.filter((o) => o.correct).length !== 1) problems.push(g[0] + ": not exactly one correct");
+        }
+        if (q.kind === "select" && q.options.filter((o) => o.correct).length === q.options.length) problems.push(g[0] + ": all options correct");
+        // wrong() must never throw
+        try {
+          if (q.kind === "sort") q.wrong([q.items[0]]);
+          else if (q.kind === "path") q.wrong(q.stones.filter((s) => !s.good)[0].n);
+          else q.wrong(q.options.filter((o) => !o.correct).map((o) => o.value).slice(0, 2));
+        } catch (e) { problems.push(g[0] + ": wrong() threw " + e.message); }
+      }
+    });
+    // independent maths spot-checks
+    const mathChecks = [
+      [listStr(factors(36)), "1, 2, 3, 4, 6, 9, 12, 18 and 36"],
+      [listStr(commonFactors(12, 18)), "1, 2, 3 and 6"],
+      [listStr(commonFactors(18, 24)), "1, 2, 3 and 6"],
+      [listStr(commonMultiples(3, 4, 40)), "12, 24 and 36"],
+      [listStr(commonMultiples(4, 6, 40)), "12, 24 and 36"],
+      [listStr(multiplesOf(7, 5)), "7, 14, 21, 28 and 35"],
+      [String(isFactorOf(5, 24)), "false"],
+      [String(isMultipleOf(12, 4)), "true"],
+    ];
+    mathChecks.forEach(function (c, i) { if (c[0] !== c[1]) problems.push("maths check " + i + ": got " + c[0] + " expected " + c[1]); });
+    return { generated: count, problems: problems.slice(0, 25), problemCount: problems.length };
+  };
+})();
+
+</script>
+</body>
+</html>
